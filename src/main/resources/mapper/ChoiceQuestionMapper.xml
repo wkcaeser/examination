@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wk.system.examination.entity.dao.ChoiceQuestionMapper">
+    <insert id="insert" parameterType="choiceQuestion">
+        INSERT INTO choicequestion
+        (description, optionA, optionB, optionC, optionD, answer, department_id, major_id, teacher_id)
+        VALUES
+        (#{description}, #{optiona}, #{optionb}, #{optionc}, #{optiond}, #{answer}, #{department_id}, #{major_id}, #{teacher_id})
+    </insert>
+
+    <update id="delete">
+        UPDATE choicequestion SET status = -1
+        WHERE id = #{id}
+    </update>
+</mapper>

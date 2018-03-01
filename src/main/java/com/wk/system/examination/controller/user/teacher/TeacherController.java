@@ -1,8 +1,11 @@
 package com.wk.system.examination.controller.user.teacher;
 
+import com.wk.system.examination.entity.dao.ExamMapper;
+import com.wk.system.examination.entity.po.Exam;
 import com.wk.system.examination.entity.po.Lesson;
 import com.wk.system.examination.entity.vo.ResponseCode;
 import com.wk.system.examination.entity.vo.ResponseData;
+import com.wk.system.examination.service.bs.domain.ExamServiceBs;
 import com.wk.system.examination.service.bs.domain.LessonServiceBs;
 import com.wk.system.examination.service.bs.users.teacher.TeacherServiceBs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,13 @@ public class TeacherController {
 
 	private final LessonServiceBs lessonServiceBs;
 
+	private final ExamServiceBs examServiceBs;
+
 	@Autowired
-	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs) {
+	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs, ExamServiceBs examServiceBs) {
 		this.teacherServiceBs = teacherServiceBs;
 		this.lessonServiceBs = lessonServiceBs;
+		this.examServiceBs = examServiceBs;
 	}
 
 	@GetMapping("/info/{username}")
@@ -57,6 +63,14 @@ public class TeacherController {
 		List<Map<String, Object>> lessons = lessonServiceBs.queryLesson(lesson);
 		return new ResponseData.Builder()
 				.data(lessons)
+				.build();
+	}
+
+	@GetMapping("/exams")
+	public ResponseData queryExams(Integer teacherId, Integer departmentId, Integer majorId, Integer lessonId, String name){
+		List res = examServiceBs.getExamList(teacherId, departmentId, majorId, lessonId, name);
+		return new ResponseData.Builder()
+				.data(res)
 				.build();
 	}
 }

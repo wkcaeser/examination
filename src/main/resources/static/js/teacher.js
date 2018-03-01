@@ -47,7 +47,24 @@ var teacher = new Vue({
             id : "",
             name : ""
         },
-        lessonAddPageShow : false
+        lessonAddPageShow : false,
+        exams : {
+            id : "",
+            name : "",
+            lesson_name : "",
+            teacher_name : "",
+            department_name : "",
+            major_name : "",
+            time : "",
+            duration : ""
+        },
+        examQueryParams : {
+            teacher_id : "",
+            department_id : "",
+            major_id : "",
+            lesson_id : "",
+            name : ""
+        }
     },
     mounted : function () {
         this.getTeacherInfo();
@@ -58,6 +75,7 @@ var teacher = new Vue({
         }, deep: true},
         'teacherInfo.id' :{handler : function () {
             this.getLessonsInfo();
+            this.getExamList();
         }, deep: true}
     },
     methods : {
@@ -172,6 +190,30 @@ var teacher = new Vue({
                 console.log(error);
                 alert("网络错误");
             })
+        },
+        getExamList : function () {
+            var _this = this;
+            _this.examQueryParams.teacher_id = _this.teacherInfo.id;
+            var params = header.requestDataParserOfGet(_this.examQueryParams);
+            axios.get("/service/teacher/exams" + params).then(function (response) {
+                if(response.data.status.code === 200){
+                    _this.exams = response.data.data;
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }
+                else {
+                    alert("考试查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        editExam : function () {
+            
+        },
+        addExam : function () {
+
         }
     }
 });

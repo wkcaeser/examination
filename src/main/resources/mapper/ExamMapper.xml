@@ -26,4 +26,34 @@
         </if>
         WHERE id = #{id}
     </update>
+
+    <select id="queryByParams" resultType="map">
+        SELECT a.id, a.name, a.releaseTime AS time, a.duration,
+        b.name AS lesson_name,
+        c.name AS teacher_name,
+        d.name AS department_name,
+        f.name AS major_name,
+        FROM exam a
+        LEFT JOIN lesson b ON a.lesson_id = b.id
+        LEFT JOIN user c ON b.teacher_id = c.id
+        LEFT JOIN department d ON b.department_id = d.id
+        LEFT JOIN major f ON b.major_id = f.id
+        WHERE 1=1
+        <if test="departmentId">
+            AND b.department_id = #{departmentId}
+        </if>
+        <if test="majorId">
+            AND b.major_id = #{majorId}
+        </if>
+        <if test="lessonId">
+            AND a.lesson_id = #{lessonId}
+        </if>
+        <if test="teacherId">
+            AND b.teacher_id = #{teacherId}
+        </if>
+        <if test="name">
+            AND a.name LIKE #{name}
+        </if>
+        ORDER BY a.updated_time DESC
+    </select>
 </mapper>

@@ -84,16 +84,20 @@
                                 <th>归属学院</th>
                                 <th>归属专业</th>
                                 <th>时间</th>
+                                <td>考试时长</td>
                             </tr>
                             </thead>
                             <tbody class="infoTableTd">
-                            <tr v-for="(val) in lessonsInfo">
+                            <tr v-for="(val) in exams">
                                 <td>{{val.name}}</td>
+                                <td>{{val.lesson_name}}</td>
                                 <td>{{val.teacher_name}}</td>
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
-                                <td>{{new Date(val.time).toLocaleDateString()}}</td>
-                                <td class="btn btn-default" @click="deleteLesson(val.id)">作废</td>
+                                <td>{{val.time}}</td>
+                                <td>{{val.duration + '分钟'}}</td>
+                                <td class="btn btn-default" @click="editExam(val.id)">编辑</td>
+                                <td class="btn btn-default" @click="deleteExam(val.id)">作废</td>
                             </tr>
                             </tbody>
                         </table>

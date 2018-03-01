@@ -70,6 +70,7 @@ CREATE TABLE choiceQuestion(
   optionB VARCHAR(64) NOT NULL COMMENT '选项B',
   optionC VARCHAR(64) NOT NULL COMMENT '选项C',
   optionD VARCHAR(64) NOT NULL COMMENT '选项D',
+  answer TINYINT NOT NULL COMMENT '答案 1-A 2-B ....',
   department_id INT NOT NULL COMMENT '学院id',
   major_id INT NOT NULL COMMENT '专业id',
   teacher_id INT NOT NULL COMMENT '创建者老师id',
