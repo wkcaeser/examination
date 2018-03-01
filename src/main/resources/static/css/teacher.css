@@ -1,0 +1,42 @@
+li:hover {
+    display: block;
+    background: green;
+    padding: 10px;
+
+}
+
+.infoTableTd tr:hover {
+    /*display: block;*/
+    background: honeydew;
+    padding: 10px;
+
+}
+
+.lessonAddButton h4:hover {
+    /*display: block;*/
+    background: yellow;
+    padding: 10px;
+
+}
+
+.rightDiv {
+    height: 100%;
+    background-color : #cac5c5;
+}
+
+.showPageDiv {
+    height: 80%;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 3%;
+}
+
+.lessonAddPage {
+    margin-top: 10%;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: wheat;
+    padding-top: 5%;
+    padding-left: 10%;
+    padding-right: 5%;
+}

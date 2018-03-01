@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wk.system.examination.entity.dao.UserMapper">
+
+    <insert id="insert" parameterType="com.wk.system.examination.entity.po.User">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO user
+        (username, password, email, name, department_id, major_id
+        <if test="level != null ">
+          , level
+        </if>
+        )
+        VALUES
+            (#{username}, #{password}, #{email}, #{name}, #{department_id}, #{major_id}
+        <if test="level != null ">
+          , #{level}
+        </if>
+        )
+    </insert>
+
+    <select id="queryByUsername" resultType="map">
+        SELECT a.id, a.username, a.level, a.name, a.email, b.name AS department_name, c.name AS major_name
+        FROM user a
+            LEFT JOIN department b ON a.department_id = b.id
+            LEFT JOIN major c ON a.major_id = c.id
+        WHERE username = #{username}
+    </select>
+
+    <select id="checkUsernameAndPassword" resultType="_int">
+        SELECT COUNT(*)
+        FROM user
+        WHERE username=#{username} AND password=#{password}
+    </select>
+</mapper>

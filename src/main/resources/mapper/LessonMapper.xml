@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wk.system.examination.entity.dao.LessonMapper">
+    <insert id="insertLesson" parameterType="lesson">
+        INSERT INTO lesson(name, teacher_id, department_id, major_id)
+                VALUES (#{name}, #{teacher_id}, #{department_id}, #{major_id})
+    </insert>
+    <update id="updateLesson">
+        UPDATE lesson SET status=-1 WHERE id = #{lessonId}
+    </update>
+    <select id="query" resultType="map">
+        SELECT a.id, a.name, b.name AS teacher_name,
+                c.name AS department_name,
+                d.name AS major_name,
+                a.updated_time AS time,
+                a.status
+        FROM lesson a
+            LEFT JOIN user b ON a.teacher_id = b.id
+            LEFT JOIN department c ON a.department_id = c.id
+            LEFT JOIN major d ON a.major_id = d.id
+        WHERE 1=1
+        <if test="id != null ">
+            AND a.id = #{id}
+        </if>
+        <if test="name != null ">
+            AND a.name Like #{name}
+        </if>
+        <if test="teacher_id != null ">
+            AND a.teacher_id = #{teacher_id}
+        </if>
+        <if test="department_id !=null">
+            AND a.department_id = #{department_id}
+        </if>
+        <if test="major_id !=null">
+            AND a.major_id = #{major_id}
+        </if>
+        <if test="status !=null">
+            AND a.status = #{status}
+        </if>
+        ORDER BY a.updated_time DESC
+    </select>
+</mapper>

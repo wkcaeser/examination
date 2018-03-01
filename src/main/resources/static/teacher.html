@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>教师工作台</title>
+</head>
+<body style="height: 100%; width: 100%">
+<div id="header">
+    <header-template :show-exit="showExit"></header-template>
+</div>
+
+<div id="test" style="height: 100%">
+    <div class="container contentBoundary" style="margin: 0; width: 100%; height: 100%">
+        <div class="row" style="height: 100%">
+            <div class="col-md-3" style="height : 75%; font-size: larger; margin-left:3%; background-color: cornflowerblue">
+                <table class="table">
+                    <caption style="font-weight: 200">个人信息</caption>
+                    <tbody>
+                    <tr>
+                        <td>姓名：</td>
+                        <td>{{teacherInfo.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>工号：</td>
+                        <td>{{teacherInfo.username}}</td>
+                    </tr>
+                    <tr>
+                        <td>学院：</td>
+                        <td>{{teacherInfo.department_name}}</td>
+                    </tr>
+                    <tr>
+                        <td>专业：</td>
+                        <td>{{teacherInfo.major_name}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <ul class="list-group" style="margin-top: 30% ">
+                    <li class="list-group-item" @click="switchPage('lessonPage')">课程管理</li>
+                    <li class="list-group-item" @click="switchPage('testPaperPage')">试卷管理</li>
+                    <li class="list-group-item" @click="switchPage('scorePage')">成绩管理</li>
+                </ul>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-7 rightDiv">
+                <div class="rollControl" style="height: 100%">
+                    <div v-show="pageShowController.lessonPage" class="showPageDiv">
+                        <table class="table">
+                            <caption style="font-weight: 200" class="lessonAddButton">
+                                <h2 style="display: inline">个人课程</h2>
+                                <h4 style="display: inline; margin-left:60%; margin-right: 10%" @click="showLessonAddPage">添加课程</h4>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>课程名称</th>
+                                <th>任课教师</th>
+                                <th>归属学院</th>
+                                <th>归属专业</th>
+                                <th>时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="infoTableTd">
+                            <tr v-for="(val) in lessonsInfo">
+                                <td>{{val.name}}</td>
+                                <td>{{val.teacher_name}}</td>
+                                <td>{{val.department_name}}</td>
+                                <td>{{val.major_name}}</td>
+                                <td>{{new Date(val.time).toLocaleDateString()}}</td>
+                                <td class="btn btn-default" @click="deleteLesson(val.id)">作废</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-show="pageShowController.testPaperPage" class="showPageDiv">
+                        <table class="table">
+                            <caption style="font-weight: 200" class="lessonAddButton">
+                                <h2 style="display: inline">个人试卷</h2>
+                                <h4 style="display: inline; margin-left:60%; margin-right: 10%" @click="showLessonAddPage">新建试卷</h4>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>试卷名称</th>
+                                <th>课程名称</th>
+                                <th>任课教师</th>
+                                <th>归属学院</th>
+                                <th>归属专业</th>
+                                <th>时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="infoTableTd">
+                            <tr v-for="(val) in lessonsInfo">
+                                <td>{{val.name}}</td>
+                                <td>{{val.teacher_name}}</td>
+                                <td>{{val.department_name}}</td>
+                                <td>{{val.major_name}}</td>
+                                <td>{{new Date(val.time).toLocaleDateString()}}</td>
+                                <td class="btn btn-default" @click="deleteLesson(val.id)">作废</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div v-show="pageShowController.scorePage" class="showPageDiv">score</div>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+
+    <!--弹出层-->
+    <!--添加课程-->
+    <div class="ejectPage" v-show="lessonAddPageShow">
+        <div class="lessonAddPage">
+            <form method="post" @submit.prevent="addLesson">
+                <span>课程名称 ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newLesson.name">
+                </label><br><br>
+                <span>归属学院 ： </span>
+                <label>
+                    <select name="department" class="form-control" v-model="newLesson.department_id" required >
+                        <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
+                    </select>
+                </label><br><br>
+                <span>归属专业 ： </span>
+                <label>
+                    <select name="major" class="form-control" v-model="newLesson.major_id" required>
+                        <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
+                    </select>
+                </label><br><br>
+                <input type="submit" class="form-control" value="添加课程"
+                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                <div><a @click="showLessonAddPage">退出</a></div><br><br>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+    <footer-template></footer-template>
+</div>
+
+</body>
+<link href="/lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+<script src="/lib/vue/vue.min.js"></script>
+<script src="/lib/vue/axios.min.js"></script>
+
+<link href="/css/boundary.css" type="text/css" rel="stylesheet"/>
+<script src="/js/boundary.js"></script>
+
+<link href="/css/teacher.css" type="text/css" rel="stylesheet">
+<script src="/js/teacher.js"></script>
+</html>

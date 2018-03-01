@@ -1,0 +1,23 @@
+.contentLeft{
+    position: fixed;
+    top: 12%;
+    bottom: 8%;
+    left: 0%;
+    width: 60%;
+    border: #ff2718;
+    padding-left: 3%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.contentRight{
+    position: absolute;
+    right: 0;
+    width: 40%;
+    min-height: 100%;
+    padding-left: 3%;
+    padding-right: 3%;
+    padding-top: 3%;
+
+}
+
