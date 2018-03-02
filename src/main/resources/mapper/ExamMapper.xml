@@ -32,7 +32,7 @@
         b.name AS lesson_name,
         c.name AS teacher_name,
         d.name AS department_name,
-        f.name AS major_name,
+        f.name AS major_name
         FROM exam a
         LEFT JOIN lesson b ON a.lesson_id = b.id
         LEFT JOIN user c ON b.teacher_id = c.id

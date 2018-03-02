@@ -5,6 +5,9 @@ import com.wk.system.examination.entity.po.Lesson;
 import com.wk.system.examination.service.bs.domain.LessonServiceBs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,7 @@ public class LessonServiceImpl implements LessonServiceBs {
 	 * @param lesson 课程信息
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
 	public void addLesson(Lesson lesson) {
 		lessonMapper.insertLesson(lesson);
 	}
@@ -32,6 +36,7 @@ public class LessonServiceImpl implements LessonServiceBs {
 	 * @param lessonId 课程id
 	 */
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
 	public void deleteLesson(int lessonId) {
 		lessonMapper.updateLesson(lessonId);
 	}

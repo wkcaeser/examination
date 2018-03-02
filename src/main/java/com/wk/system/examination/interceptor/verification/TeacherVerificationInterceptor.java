@@ -29,9 +29,6 @@ public class TeacherVerificationInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		System.out.println("teacher do here");
-		String url = request.getRequestURL().toString();
-		System.out.println(url.substring(0, url.length()-request.getRequestURI().length()));
 		Cookie[] cookies = request.getCookies();
 		ResponseData responseData = new ResponseData.Builder()
 				.statusCode(ResponseCode.CODE_LOGIN_TIMEOUT)
