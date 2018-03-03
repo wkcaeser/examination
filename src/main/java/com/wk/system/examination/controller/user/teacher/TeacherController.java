@@ -5,8 +5,7 @@ import com.wk.system.examination.entity.po.Exam;
 import com.wk.system.examination.entity.po.Lesson;
 import com.wk.system.examination.entity.vo.ResponseCode;
 import com.wk.system.examination.entity.vo.ResponseData;
-import com.wk.system.examination.service.bs.domain.ExamServiceBs;
-import com.wk.system.examination.service.bs.domain.LessonServiceBs;
+import com.wk.system.examination.service.bs.domain.*;
 import com.wk.system.examination.service.bs.users.teacher.TeacherServiceBs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +23,20 @@ public class TeacherController {
 
 	private final ExamServiceBs examServiceBs;
 
+	private final ObjectiveQuestionServiceBs objectiveQuestionServiceBs;
+
+	private final ChoiceQuestionServiceBs choiceQuestionServiceBs;
+
+	private final ExamInfoServiceBs examInfoServiceBs;
+
 	@Autowired
-	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs, ExamServiceBs examServiceBs) {
+	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs, ExamServiceBs examServiceBs, ObjectiveQuestionServiceBs objectiveQuestionServiceBs, ChoiceQuestionServiceBs choiceQuestionServiceBs, ExamInfoServiceBs examInfoServiceBs) {
 		this.teacherServiceBs = teacherServiceBs;
 		this.lessonServiceBs = lessonServiceBs;
 		this.examServiceBs = examServiceBs;
+		this.objectiveQuestionServiceBs = objectiveQuestionServiceBs;
+		this.choiceQuestionServiceBs = choiceQuestionServiceBs;
+		this.examInfoServiceBs = examInfoServiceBs;
 	}
 
 	@GetMapping("/info/{username}")
@@ -67,10 +75,58 @@ public class TeacherController {
 	}
 
 	@GetMapping("/exams")
-	public ResponseData queryExams(Integer teacherId, Integer departmentId, Integer majorId, Integer lessonId, String name){
+	public ResponseData queryExams(@RequestParam(value = "teacher_id", required = false) Integer teacherId,
+	                               @RequestParam(value = "department_id", required = false) Integer departmentId,
+	                               @RequestParam(value = "major_id", required = false) Integer majorId,
+	                               @RequestParam(value = "lesson_id", required = false) Integer lessonId,
+	                               @RequestParam(value = "name", required = false) String name){
 		List res = examServiceBs.getExamList(teacherId, departmentId, majorId, lessonId, name);
 		return new ResponseData.Builder()
 				.data(res)
 				.build();
+	}
+
+	@PostMapping("/exam/add")
+	public ResponseData addExam(Exam exam){
+		examServiceBs.addExam(exam);
+		return new ResponseData.Builder().build();
+	}
+
+	@PostMapping("/exam/delete/{examId}")
+	public ResponseData deleteExam(@PathVariable("examId") Integer examId){
+		examServiceBs.deleteExam(examId);
+		return new ResponseData.Builder().build();
+	}
+
+	@PostMapping("/exam/update")
+	public ResponseData updateExam(Exam exam){
+		examServiceBs.updateExam(exam);
+		return new ResponseData.Builder().build();
+	}
+
+	@PostMapping("/question/choice/add")
+	public ResponseData addNewChoiceQuestion(String description, String optionA, String optionB, String optionC, String optionD, String answer, int score, int exam_id){
+		choiceQuestionServiceBs.addNewChoiceQuestion(description, optionA, optionB, optionC, optionD, answer, score, exam_id);
+		return new ResponseData.Builder().build();
+	}
+
+	@PostMapping("/question/objective/add")
+	public ResponseData addNewChoiceQuestion(String description, int score, int exam_id){
+		objectiveQuestionServiceBs.addNewObjectiveQuestion(description, score, exam_id);
+		return new ResponseData.Builder().build();
+	}
+
+	@GetMapping("/question/{examId}/{type}")
+	public ResponseData getExamQuestionsByIdAndType(@PathVariable("examId") int examId, @PathVariable("type") int type){
+		List<Map<String, Object>> res = examInfoServiceBs.getExamQuestionByExamIdAndType(examId, type);
+		return new ResponseData.Builder()
+				.data(res)
+				.build();
+	}
+
+	@PostMapping("/question/delete/{id}")
+	public ResponseData deleteExamQuestion(@PathVariable("id") int id){
+		examInfoServiceBs.deleteExamInfo(id);
+		return new ResponseData.Builder().build();
 	}
 }

@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wk.system.examination.entity.dao.ChoiceQuestionMapper">
     <insert id="insert" parameterType="choiceQuestion">
+        <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
         INSERT INTO choicequestion
-        (description, optionA, optionB, optionC, optionD, answer, department_id, major_id, teacher_id)
+        (description, optionA, optionB, optionC, optionD, answer, score, department_id, major_id, teacher_id)
         VALUES
-        (#{description}, #{optiona}, #{optionb}, #{optionc}, #{optiond}, #{answer}, #{department_id}, #{major_id}, #{teacher_id})
+        (#{description}, #{optiona}, #{optionb}, #{optionc}, #{optiond}, #{answer}, #{score}, #{department_id}, #{major_id}, #{teacher_id})
     </insert>
 
     <update id="delete">

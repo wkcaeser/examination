@@ -1,18 +1,28 @@
 package com.wk.system.examination.entity.po;
 
-import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Date;
 
 public class Exam {
   private Long id;
   private String name;
   private Long lesson_id;
-  private java.sql.Timestamp releaseTime;
+  private String releaseTime;
   private Long duration;
   private Long status;
   private java.sql.Timestamp created_time;
   private java.sql.Timestamp updated_time;
 
-  public Long getId() {
+
+	public String getReleaseTime() {
+		return releaseTime;
+	}
+
+	public void setReleaseTime(String releaseTime) {
+		this.releaseTime = releaseTime;
+	}
+
+	public Long getId() {
     return id;
   }
 
@@ -35,15 +45,6 @@ public class Exam {
   public void setLesson_id(Long lesson_id) {
     this.lesson_id = lesson_id;
   }
-
-	public Timestamp getReleaseTime() {
-		return releaseTime;
-	}
-
-	public void setReleaseTime(Timestamp releaseTime) {
-		this.releaseTime = releaseTime;
-	}
-
 	public Long getDuration() {
     return duration;
   }

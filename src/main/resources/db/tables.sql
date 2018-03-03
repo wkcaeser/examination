@@ -71,6 +71,7 @@ CREATE TABLE choiceQuestion(
   optionC VARCHAR(64) NOT NULL COMMENT '选项C',
   optionD VARCHAR(64) NOT NULL COMMENT '选项D',
   answer TINYINT NOT NULL COMMENT '答案 1-A 2-B ....',
+  score TINYINT NOT NULL COMMENT '分值',
   department_id INT NOT NULL COMMENT '学院id',
   major_id INT NOT NULL COMMENT '专业id',
   teacher_id INT NOT NULL COMMENT '创建者老师id',
@@ -86,6 +87,7 @@ CREATE TABLE choiceQuestion(
 CREATE TABLE objectiveQuestion(
   id INT NOT NULL AUTO_INCREMENT COMMENT '自增id',
   description VARCHAR(256) NOT NULL COMMENT '题目描述',
+  score TINYINT NOT NULL COMMENT '分值',
   department_id INT NOT NULL COMMENT '学院id',
   major_id INT NOT NULL COMMENT '专业id',
   teacher_id INT NOT NULL COMMENT '创建者老师id',

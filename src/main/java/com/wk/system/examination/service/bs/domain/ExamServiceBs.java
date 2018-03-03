@@ -1,6 +1,8 @@
 package com.wk.system.examination.service.bs.domain;
 
 
+import com.wk.system.examination.entity.po.Exam;
+
 import java.util.List;
 import java.util.Map;
 
@@ -20,4 +22,22 @@ public interface ExamServiceBs {
 	                                      Integer lessonId,
 	                                      String name
 	                                      );
+
+	/**
+	 * 添加exam
+	 * @param exam 考试信息
+	 */
+	void addExam(Exam exam);
+
+	/**
+	 * 删除exam
+	 * @param examId exam id
+	 */
+	void deleteExam(int examId);
+
+	/**
+	 * 更新exam信息
+	 * @param exam 考试信息
+	 */
+	void updateExam(Exam exam);
 }

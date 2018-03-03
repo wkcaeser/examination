@@ -47,7 +47,7 @@
                         <table class="table">
                             <caption style="font-weight: 200" class="lessonAddButton">
                                 <h2 style="display: inline">个人课程</h2>
-                                <h4 style="display: inline; margin-left:60%; margin-right: 10%" @click="showLessonAddPage">添加课程</h4>
+                                <h4 class="btn btn-primary" style="display: inline; margin-left:60%; margin-right: 10%" @click="showLessonAddPage">添加课程</h4>
                             </caption>
                             <thead>
                             <tr>
@@ -65,7 +65,7 @@
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
                                 <td>{{new Date(val.time).toLocaleDateString()}}</td>
-                                <td class="btn btn-default" @click="deleteLesson(val.id)">作废</td>
+                                <td class="btn btn-primary" @click="deleteLesson(val.id)">作废</td>
                             </tr>
                             </tbody>
                         </table>
@@ -74,30 +74,30 @@
                         <table class="table">
                             <caption style="font-weight: 200" class="lessonAddButton">
                                 <h2 style="display: inline">个人试卷</h2>
-                                <h4 style="display: inline; margin-left:60%; margin-right: 10%" @click="showLessonAddPage">新建试卷</h4>
+                                <h4 class="btn btn-primary" style="display: inline; margin-left:60%; margin-right: 10%" @click="showExamAddPage">新建试卷</h4>
                             </caption>
                             <thead>
                             <tr>
                                 <th>试卷名称</th>
                                 <th>课程名称</th>
-                                <th>任课教师</th>
-                                <th>归属学院</th>
-                                <th>归属专业</th>
+                                <th>教师</th>
+                                <th>学院</th>
+                                <th>专业</th>
                                 <th>时间</th>
-                                <td>考试时长</td>
+                                <th>时长</th>
                             </tr>
                             </thead>
                             <tbody class="infoTableTd">
-                            <tr v-for="(val) in exams">
+                            <tr v-for="(val) in exams" @dblclick="showExamQuestionEditDiv(val)">
                                 <td>{{val.name}}</td>
                                 <td>{{val.lesson_name}}</td>
                                 <td>{{val.teacher_name}}</td>
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
-                                <td>{{val.time}}</td>
+                                <td>{{new Date(val.time).toLocaleDateString()}}</td>
                                 <td>{{val.duration + '分钟'}}</td>
-                                <td class="btn btn-default" @click="editExam(val.id)">编辑</td>
-                                <td class="btn btn-default" @click="deleteExam(val.id)">作废</td>
+                                <td class="btn btn-primary" @click="showExamEditPage(val)">编辑</td>
+                                <td class="btn btn-primary" @click="deleteExam(val.id)">作废</td>
                             </tr>
                             </tbody>
                         </table>
@@ -111,7 +111,7 @@
 
     <!--弹出层-->
     <!--添加课程-->
-    <div class="ejectPage" v-show="lessonAddPageShow">
+    <div class="ejectPage" v-if="lessonAddPageShow">
         <div class="lessonAddPage">
             <form method="post" @submit.prevent="addLesson">
                 <span>课程名称 ： </span>
@@ -133,6 +133,188 @@
                 <input type="submit" class="form-control" value="添加课程"
                        style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
                 <div><a @click="showLessonAddPage">退出</a></div><br><br>
+            </form>
+        </div>
+    </div>
+
+    <!--添加试卷 编辑试卷-->
+    <div class="ejectPage" v-if="examAddPageShow">
+        <div class="lessonAddPage">
+            <form method="post" @submit.prevent="doExamEdit">
+                <span>考试名称 ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newExam.name">
+                </label><br><br>
+                <span>所属课程 ： </span>
+                <label>
+                    <select class="form-control" v-model="newExam.lesson_id" required >
+                        <option v-for="(val) in lessonsInfo" v-bind:value="val.id">{{val.name}}--{{new Date(val.time).toLocaleDateString()}}</option>
+                    </select>
+                </label><br><br>
+                <span>考试时间 ： </span>
+                <label>
+                    <input type="datetime-local" class="form-control" v-model="newExam.releaseTime"  required>
+                </label><br><br>
+                <span>考试时长 ： </span>
+                <label>
+                    <input type="number" class="form-control" v-model="newExam.duration" required>
+                </label><br><br>
+                <input type="submit" class="form-control" value="添加考试" v-if="examAddControl"
+                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                <input type="submit" class="form-control" value="确认修改" v-if="examEditControl"
+                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                <div><a @click="showExamAddPage">退出</a></div><br><br>
+            </form>
+        </div>
+    </div>
+
+    <!--编辑试卷内容-->
+    <div v-if="examQuestionEditControl" class="examQuestionEditDiv rollControl">
+        <div>
+            <table class="table">
+                <caption>
+                    <h2 style="display: inline">考试信息</h2>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="showExamQuestionEditDiv()">退出编辑</h4>
+                </caption>
+                <thead>
+                <tr>
+                    <th>试卷名称</th>
+                    <th>课程名称</th>
+                    <th>教师</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>时间</th>
+                    <th>时长</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr>
+                    <td>{{examInfoOfEdited.name}}</td>
+                    <td>{{examInfoOfEdited.lesson_name}}</td>
+                    <td>{{examInfoOfEdited.teacher_name}}</td>
+                    <td>{{examInfoOfEdited.department_name}}</td>
+                    <td>{{examInfoOfEdited.major_name}}</td>
+                    <td>{{new Date(examInfoOfEdited.time).toLocaleDateString()}}</td>
+                    <td>{{examInfoOfEdited.duration + '分钟'}}</td>
+                </tr>
+                </tbody>
+            </table><br><br>
+            <table class="table">
+                <caption>
+                    <h4 style="display: inline">考试题----选择题</h4>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="showNewChoiceQuestionAddDiv">添加</h4>
+                </caption>
+                <thead>
+                <tr>
+                    <th>题目描述</th>
+                    <th>选项A</th>
+                    <th>选项B</th>
+                    <th>选项C</th>
+                    <th>选项D</th>
+                    <th>正确答案</th>
+                    <th>分值</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr v-for="(val) in choiceQuestions">
+                    <td>{{val.description}}</td>
+                    <td>{{val.optionA}}</td>
+                    <td>{{val.optionB}}</td>
+                    <td>{{val.optionC}}</td>
+                    <td>{{val.optionD}}</td>
+                    <td>{{
+                        String.fromCharCode("A".charCodeAt() + val.answer - 1)
+                        }}</td>
+                    <td>{{val.score}}</td>
+                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 1)">删除</td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <caption>
+                    <h4 style="display: inline">考试题----主观题</h4>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="showNewObjectiveQuestionAddDivControl">添加</h4>
+                </caption>
+                <thead>
+                <tr>
+                    <th>题目描述</th>
+                    <th>分值</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr  v-for="(val) in objectiveQuestions">
+                    <td>{{val.description}}</td>
+                    <td>{{val.score}}</td>
+                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 2)">删除</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <br><br><br>
+        </div>
+    </div>
+
+    <!--添加选择题-->
+    <div v-if="examChoiceQuestionAddDivControl" class="ejectPage rollControl">
+        <div class="lessonAddPage">
+            <form method="post" @submit.prevent="addNewChoiceQuestion">
+                <span>题目描述 ： </span>
+                <label>
+                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description">
+                </label><br><br>
+                <span>选项A ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionA">
+                </label><br><br>
+                <span>选项B ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionB">
+                </label><br><br>
+                <span>选项C ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionC">
+                </label><br><br>
+                <span>选项D ： </span>
+                <label>
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionD">
+                </label><br><br>
+                <span>答案 ： </span>
+                <label>
+                    <select class="form-control" v-model="newChoiceQuestion.answer" required >
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </label><br><br>
+                <span>分值 ： </span>
+                <label>
+                    <input type="number" class="form-control" v-model="newChoiceQuestion.score">
+                </label><br><br>
+                <input type="submit" class="form-control" value="添加试题"
+                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                <div><a @click="showNewChoiceQuestionAddDiv">退出</a></div><br><br><br><br>
+            </form>
+        </div>
+    </div>
+    <br><br><br>
+    <!--添加客观题-->
+    <div v-if="examObjectiveQuestionAddDivControl" class="ejectPage rollControl">
+        <div class="lessonAddPage">
+            <form method="post" @submit.prevent="addNewObjectiveQuestion">
+                <span>题目描述 ： </span>
+                <label>
+                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description">
+                </label><br><br>
+                <span>分值 ： </span>
+                <label>
+                    <input type="number" class="form-control" v-model="newObjectiveQuestion.score">
+                </label><br><br>
+                <input type="submit" class="form-control" value="添加试题"
+                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                <div><a @click="showNewObjectiveQuestionAddDivControl">退出</a></div><br><br><br><br>
             </form>
         </div>
     </div>

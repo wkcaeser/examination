@@ -10,4 +10,16 @@
         UPDATE examinfo SET status = -1
         WHERE id = #{id}
     </update>
+
+    <select id="getExamQuestionsByExamIdAndType" resultType="map">
+        SELECT a.id AS examInfoId, b.*
+        FROM examinfo a
+        <if test="type == 1">
+            LEFT JOIN choicequestion b ON a.question_id = b.id
+        </if>
+        <if test="type == 2">
+            LEFT JOIN objectivequestion b ON a.question_id = b.id
+        </if>
+        WHERE a.exam_id = #{examId} AND a.type = #{type} AND a.status = 0
+    </select>
 </mapper>

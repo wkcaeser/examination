@@ -3,6 +3,7 @@ package com.wk.system.examination.entity.po;
 public class ObjectiveQuestion {
   private Long id;
   private String description;
+  private Integer score;
   private Long department_id;
   private Long major_id;
   private Long teacher_id;
@@ -10,7 +11,15 @@ public class ObjectiveQuestion {
   private java.sql.Timestamp created_time;
   private java.sql.Timestamp updated_time;
 
-  public Long getId() {
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
+
+	public Long getId() {
     return id;
   }
 

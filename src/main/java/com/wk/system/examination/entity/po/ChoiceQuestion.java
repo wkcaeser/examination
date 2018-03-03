@@ -8,12 +8,21 @@ public class ChoiceQuestion {
   private String optionc;
   private String optiond;
   private Long answer;
+  private Integer score;
   private Long department_id;
   private Long major_id;
   private Long teacher_id;
   private Long status;
   private java.sql.Timestamp created_time;
   private java.sql.Timestamp updated_time;
+
+	public Integer getScore() {
+		return score;
+	}
+
+	public void setScore(Integer score) {
+		this.score = score;
+	}
 
 	public Long getAnswer() {
 		return answer;

@@ -4,8 +4,11 @@ import com.google.gson.Gson;
 import com.wk.system.examination.entity.vo.ResponseCode;
 import com.wk.system.examination.entity.vo.ResponseData;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Test {
@@ -23,5 +26,11 @@ public class Test {
 		System.out.println(responseData);
 		ArrayList<Integer> list = (ArrayList<Integer>) responseData.getData();
 		System.out.println(list.get(0));
+	}
+
+	@org.junit.Test
+	public void testTime(){
+		Instant instant = new Date("2018-03-02T15:00").toInstant();
+		System.out.println(instant.toString());
 	}
 }

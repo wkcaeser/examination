@@ -20,4 +20,6 @@ public interface ExamMapper {
 	                                        @Param("majorId") Integer majorId,
 	                                        @Param("lessonId") Integer lessonId,
 	                                        @Param("name") String name);
+
+	Map<String, Object> selectById(@Param("id") Integer id);
 }

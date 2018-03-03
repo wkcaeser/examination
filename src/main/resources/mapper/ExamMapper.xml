@@ -11,10 +11,7 @@
     </update>
 
     <update id="update" parameterType="exam">
-        UPDATE exam SET 1=1
-        <if test="name">
-            , name = #{name}
-        </if>
+        UPDATE exam SET name = #{name}
         <if test="lesson_id">
             , lesson_id = #{lesson_id}
         </if>
@@ -54,6 +51,21 @@
         <if test="name">
             AND a.name LIKE #{name}
         </if>
+        AND a.status = 0
         ORDER BY a.updated_time DESC
+    </select>
+
+    <select id="selectById" resultType="Map">
+        SELECT
+        b.id AS lesson_id,
+        c.id AS teacher_id,
+        d.id AS department_id,
+        f.id AS major_id
+        FROM exam a
+        LEFT JOIN lesson b ON a.lesson_id = b.id
+        LEFT JOIN user c ON b.teacher_id = c.id
+        LEFT JOIN department d ON b.department_id = d.id
+        LEFT JOIN major f ON b.major_id = f.id
+        WHERE a.id = #{id}
     </select>
 </mapper>

@@ -64,6 +64,61 @@ var teacher = new Vue({
             major_id : "",
             lesson_id : "",
             name : ""
+        },
+        newExam : {
+            id : "",
+            name : "",
+            lesson_id : "",
+            releaseTime : "",
+            duration : ""
+        },
+        examAddPageShow : false,
+        examEditControl : false,
+        examAddControl : false,
+        examQuestionEditControl : false,
+        examInfoOfEdited : {
+            id : "",
+            name : "",
+            lesson_name : "",
+            teacher_name : "",
+            department_name : "",
+            major_name : "",
+            time : "",
+            duration : ""
+        },
+        examChoiceQuestionAddDivControl : false,
+        examObjectiveQuestionAddDivControl : false,
+        newChoiceQuestion : {
+            description : "",
+            optionA : "",
+            optionB : "",
+            optionC : "",
+            optionD : "",
+            answer : "",
+            score : "",
+            exam_id : ""
+        },
+        newObjectiveQuestion : {
+            description : "",
+            score : "",
+            exam_id : ""
+        },
+        choiceQuestions : {
+            examInfoId : "",
+            id : "",
+            description : "",
+            optionA : "",
+            optionB : "",
+            optionC : "",
+            optionD : "",
+            answer : "",
+            score : ""
+        },
+        objectiveQuestions : {
+            examInfoId : "",
+            id : "",
+            description : "",
+            score : ""
         }
     },
     mounted : function () {
@@ -75,7 +130,15 @@ var teacher = new Vue({
         }, deep: true},
         'teacherInfo.id' :{handler : function () {
             this.getLessonsInfo();
+        }, deep: true},
+        'pageShowController.lessonPage' :{handler : function () {
+            this.getLessonsInfo();
+        }, deep: true},
+        'pageShowController.testPaperPage' :{handler : function () {
             this.getExamList();
+        }, deep: true},
+        'pageShowController.scorePage' :{handler : function () {
+            console.log("score");
         }, deep: true}
     },
     methods : {
@@ -133,7 +196,6 @@ var teacher = new Vue({
         },
         getLessonsInfo : function () {
            var _this = this;
-           console.log(_this.teacherInfo.id);
            _this.lessonQueryParams.teacher_id = _this.teacherInfo.id;
            _this.lessonQueryParams.status = 0;
            var params = header.requestDataParserOfGet(_this.lessonQueryParams);
@@ -210,10 +272,181 @@ var teacher = new Vue({
             })
         },
         editExam : function () {
-            
+            var _this = this;
+            var params = header.requestDataParser(_this.newExam);
+            axios.post("/service/teacher/exam/update", params).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("修改考试信息成功");
+                    _this.showExamAddPage();
+                    _this.getExamList();
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("修改考试信息失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        deleteExam : function (examId) {
+            var _this = this;
+            axios.post("/service/teacher/exam/delete/" + examId).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("删除成功");
+                    _this.getExamList();
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("修改失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
         },
         addExam : function () {
-
+            var _this = this;
+            _this.newExam.id = "";
+            var params = header.requestDataParser(_this.newExam);
+            axios.post("/service/teacher/exam/add", params).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("添加考试成功");
+                    _this.showExamAddPage();
+                    _this.getExamList();
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("添加考试失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        showExamAddPage : function () {
+            this.examAddPageShow = !(this.examAddPageShow);
+            if(this.examAddPageShow === true){
+                this.examEditControl = false;
+                this.examAddControl = true;
+                this.getLessonsInfo();
+            }
+        },
+        showExamEditPage : function (data) {
+            this.examAddPageShow = !(this.examAddPageShow);
+            if(this.examAddPageShow === true){
+                this.examAddControl = false;
+                this.examEditControl = true;
+                this.newExam = data;
+                this.getLessonsInfo();
+            }
+        },
+        doExamEdit : function () {
+            if(this.examAddControl){
+                this.addExam();
+            }
+            if(this.examEditControl){
+                this.editExam();
+            }
+        },
+        showExamQuestionEditDiv : function (examInfo) {
+            var _this = this;
+            _this.examQuestionEditControl = !(_this.examQuestionEditControl);
+            if(_this.examQuestionEditControl === true){
+                _this.examInfoOfEdited = examInfo;
+                _this.getExamQuestionList(examInfo.id, 1);
+                _this.getExamQuestionList(examInfo.id, 2);
+            }
+        },
+        showNewChoiceQuestionAddDiv : function () {
+            this.examChoiceQuestionAddDivControl = !(this.examChoiceQuestionAddDivControl);
+        },
+        showNewObjectiveQuestionAddDivControl : function () {
+            this.examObjectiveQuestionAddDivControl = !(this.examObjectiveQuestionAddDivControl);
+        },
+        getExamQuestionList : function (examId, type) {
+            var _this = this;
+            axios.get("/service/teacher/question/"+examId+"/"+type).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    if(type === 1){
+                        _this.choiceQuestions = response.data.data;
+                    }else if(type === 2){
+                        _this.objectiveQuestions = response.data.data;
+                    }
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        addNewChoiceQuestion : function () {
+            var _this = this;
+            _this.newChoiceQuestion.exam_id = _this.examInfoOfEdited.id;
+            var params = header.requestDataParser(_this.newChoiceQuestion);
+            axios.post("/service/teacher/question/choice/add", params).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("添加选择题成功");
+                    _this.showNewChoiceQuestionAddDiv();
+                    _this.getExamQuestionList(_this.examInfoOfEdited.id, 1);
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("添加选择题失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        addNewObjectiveQuestion : function () {
+            var _this = this;
+            _this.newObjectiveQuestion.exam_id = _this.examInfoOfEdited.id;
+            var params = header.requestDataParser(_this.newObjectiveQuestion);
+            axios.post("/service/teacher/question/objective/add", params).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("添加客观题题成功");
+                    _this.showNewObjectiveQuestionAddDivControl();
+                    _this.getExamQuestionList(_this.examInfoOfEdited.id, 2);
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("添加客观题失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        deleteExamQuestion : function (id, type) {
+            var _this = this;
+            axios.post("/service/teacher/question/delete/" + id).then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                    alert("删除成功");
+                    if(type === 1) {
+                        _this.getExamQuestionList(_this.examInfoOfEdited.id, 1);
+                    }else if(type === 2){
+                        _this.getExamQuestionList(_this.examInfoOfEdited.id, 2);
+                    }
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("删除失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
         }
     }
 });
