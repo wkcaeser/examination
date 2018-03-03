@@ -1,12 +1,9 @@
 package com.wk.system.examination.interceptor.verification;
 
 import com.wk.system.examination.entity.codes.LevelCode;
-import com.wk.system.examination.entity.po.User;
 import com.wk.system.examination.entity.vo.ResponseCode;
 import com.wk.system.examination.entity.vo.ResponseData;
 import com.wk.system.examination.service.bs.signature.TokenPoolBs;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,13 +15,13 @@ import java.util.Map;
 /**
  * 教师操作权限检查
  */
-@Component
-public class TeacherVerificationInterceptor implements HandlerInterceptor {
-	private final TokenPoolBs tokenPoolBs;
+public class VerificationInterceptor implements HandlerInterceptor {
+	private TokenPoolBs tokenPoolBs;
+	private LevelCode levelCode;
 
-	@Autowired
-	public TeacherVerificationInterceptor(TokenPoolBs tokenPoolBs) {
+	public VerificationInterceptor(TokenPoolBs tokenPoolBs, LevelCode levelCode) {
 		this.tokenPoolBs = tokenPoolBs;
+		this.levelCode = levelCode;
 	}
 
 	@Override
@@ -55,7 +52,7 @@ public class TeacherVerificationInterceptor implements HandlerInterceptor {
 		//验证username和token的正确性及权限
 		if (tokenPoolBs.checkToken(username, token)){
 			Map<String, Object> user = tokenPoolBs.getUserInfo(username);
-			if(Integer.parseInt(user.get("level").toString()) == LevelCode.LEVEL_TEACHER.getValue()){
+			if(Integer.parseInt(user.get("level").toString()) == levelCode.getValue()){
 				return true;
 			}
 		}

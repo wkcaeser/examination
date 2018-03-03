@@ -1,0 +1,10 @@
+.rightDiv {
+    height: 100%;
+    background-color : #cac5c5;
+}
+
+li:hover {
+    display: block;
+    background: green;
+    padding: 10px;
+}

@@ -63,18 +63,18 @@ public class Lesson {
 	}
 
 	public Timestamp getCreated_time() {
-		return created_time;
+		return (Timestamp) created_time.clone();
 	}
 
 	public void setCreated_time(Timestamp created_time) {
-		this.created_time = created_time;
+		this.created_time = (Timestamp) created_time.clone();
 	}
 
 	public Timestamp getUpdated_time() {
-		return updated_time;
+		return (Timestamp) updated_time.clone();
 	}
 
 	public void setUpdated_time(Timestamp updated_time) {
-		this.updated_time = updated_time;
+		this.updated_time = (Timestamp) updated_time.clone();
 	}
 }

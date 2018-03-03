@@ -1,6 +1,8 @@
 package com.wk.system.examination.entity.po;
 
 
+import java.sql.Timestamp;
+
 public class Department {
 
   private long id;
@@ -38,20 +40,20 @@ public class Department {
 
 
   public java.sql.Timestamp getCreatedTime() {
-    return createdTime;
+    return (Timestamp) createdTime.clone();
   }
 
   public void setCreatedTime(java.sql.Timestamp createdTime) {
-    this.createdTime = createdTime;
+    this.createdTime = (Timestamp) createdTime.clone();
   }
 
 
   public java.sql.Timestamp getUpdatedTime() {
-    return updatedTime;
+    return (Timestamp) updatedTime.clone();
   }
 
   public void setUpdatedTime(java.sql.Timestamp updatedTime) {
-    this.updatedTime = updatedTime;
+    this.updatedTime = (Timestamp) updatedTime.clone();
   }
 
 }

@@ -73,7 +73,7 @@ public class TokenPoolImpl implements TokenPoolBs {
 		return tokenEntity.userInfo;
 	}
 
-	private class TokenEntity{
+	private static class TokenEntity{
 		private String token;
 		private Map<String,Object> userInfo;
 		private long createdTime;

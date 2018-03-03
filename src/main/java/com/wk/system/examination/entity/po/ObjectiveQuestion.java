@@ -1,5 +1,7 @@
 package com.wk.system.examination.entity.po;
 
+import java.sql.Timestamp;
+
 public class ObjectiveQuestion {
   private Long id;
   private String description;
@@ -68,18 +70,18 @@ public class ObjectiveQuestion {
   }
 
   public java.sql.Timestamp getCreated_time() {
-    return created_time;
+    return (Timestamp) created_time.clone();
   }
 
   public void setCreated_time(java.sql.Timestamp created_time) {
-    this.created_time = created_time;
+    this.created_time = (Timestamp) created_time.clone();
   }
 
   public java.sql.Timestamp getUpdated_time() {
-    return updated_time;
+    return (Timestamp) updated_time.clone();
   }
 
   public void setUpdated_time(java.sql.Timestamp updated_time) {
-    this.updated_time = updated_time;
+    this.updated_time = (Timestamp) updated_time.clone();
   }
 }

@@ -1,5 +1,7 @@
 package com.wk.system.examination.interceptor.verification;
 
+import com.wk.system.examination.entity.codes.LevelCode;
+import com.wk.system.examination.service.bs.signature.TokenPoolBs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,16 +13,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class VerificationConfiguration extends WebMvcConfigurerAdapter {
 
-	private final TeacherVerificationInterceptor teacherVerificationInterceptor;
+	private final TokenPoolBs tokenPoolBs;
 
 	@Autowired
-	public VerificationConfiguration(TeacherVerificationInterceptor teacherVerificationInterceptor) {
-		this.teacherVerificationInterceptor = teacherVerificationInterceptor;
+	public VerificationConfiguration(TokenPoolBs tokenPoolBs) {
+		this.tokenPoolBs = tokenPoolBs;
 	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(teacherVerificationInterceptor)
+		registry.addInterceptor(new VerificationInterceptor(tokenPoolBs, LevelCode.LEVEL_TEACHER))
 				.addPathPatterns("/service/teacher/**");
+		registry.addInterceptor(new VerificationInterceptor(tokenPoolBs, LevelCode.LEVEL_STUDENT))
+				.addPathPatterns("/service/student/**");
 	}
 }

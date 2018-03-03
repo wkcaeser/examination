@@ -23,7 +23,7 @@ public class ResponseData {
 		return data;
 	}
 
-	private class Status{
+	private static class Status{
 		private int code;
 		private String msg;
 
