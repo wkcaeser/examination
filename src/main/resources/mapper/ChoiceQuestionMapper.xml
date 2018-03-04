@@ -5,14 +5,14 @@
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO choicequestion
+        INSERT INTO choiceQuestion
         (description, optionA, optionB, optionC, optionD, answer, score, department_id, major_id, teacher_id)
         VALUES
         (#{description}, #{optiona}, #{optionb}, #{optionc}, #{optiond}, #{answer}, #{score}, #{department_id}, #{major_id}, #{teacher_id})
     </insert>
 
     <update id="delete">
-        UPDATE choicequestion SET status = -1
+        UPDATE choiceQuestion SET status = -1
         WHERE id = #{id}
     </update>
 </mapper>

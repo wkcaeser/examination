@@ -94,7 +94,7 @@
                                 <td>{{val.teacher_name}}</td>
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
-                                <td>{{new Date(val.time).toLocaleDateString()}}</td>
+                                <td>{{header.getTimeFormat(val.time)}}</td>
                                 <td>{{val.duration + '分钟'}}</td>
                                 <td class="btn btn-primary" @click="showExamEditPage(val)">编辑</td>
                                 <td class="btn btn-primary" @click="deleteExam(val.id)">作废</td>
@@ -194,7 +194,7 @@
                     <td>{{examInfoOfEdited.teacher_name}}</td>
                     <td>{{examInfoOfEdited.department_name}}</td>
                     <td>{{examInfoOfEdited.major_name}}</td>
-                    <td>{{new Date(examInfoOfEdited.time).toLocaleDateString()}}</td>
+                    <td>{{header.getTimeFormat(examInfoOfEdited.time) }}</td>
                     <td>{{examInfoOfEdited.duration + '分钟'}}</td>
                 </tr>
                 </tbody>
@@ -227,7 +227,7 @@
                         String.fromCharCode("A".charCodeAt() + val.answer - 1)
                         }}</td>
                     <td>{{val.score}}</td>
-                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 1)">删除</td>
+                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 1, examInfoOfEdited.id)">删除</td>
                 </tr>
                 </tbody>
             </table>
@@ -247,7 +247,7 @@
                 <tr  v-for="(val) in objectiveQuestions">
                     <td>{{val.description}}</td>
                     <td>{{val.score}}</td>
-                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 2)">删除</td>
+                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 2, examInfoOfEdited.id)">删除</td>
                 </tr>
                 </tbody>
             </table>
@@ -262,23 +262,23 @@
             <form method="post" @submit.prevent="addNewChoiceQuestion">
                 <span>题目描述 ： </span>
                 <label>
-                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description">
+                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description" required>
                 </label><br><br>
                 <span>选项A ： </span>
                 <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionA">
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionA" required>
                 </label><br><br>
                 <span>选项B ： </span>
                 <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionB">
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionB" required>
                 </label><br><br>
                 <span>选项C ： </span>
                 <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionC">
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionC" required>
                 </label><br><br>
                 <span>选项D ： </span>
                 <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionD">
+                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionD" required>
                 </label><br><br>
                 <span>答案 ： </span>
                 <label>
@@ -291,7 +291,7 @@
                 </label><br><br>
                 <span>分值 ： </span>
                 <label>
-                    <input type="number" class="form-control" v-model="newChoiceQuestion.score">
+                    <input type="number" class="form-control" v-model="newChoiceQuestion.score" required>
                 </label><br><br>
                 <input type="submit" class="form-control" value="添加试题"
                        style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
@@ -306,11 +306,11 @@
             <form method="post" @submit.prevent="addNewObjectiveQuestion">
                 <span>题目描述 ： </span>
                 <label>
-                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description">
+                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description" required>
                 </label><br><br>
                 <span>分值 ： </span>
                 <label>
-                    <input type="number" class="form-control" v-model="newObjectiveQuestion.score">
+                    <input type="number" class="form-control" v-model="newObjectiveQuestion.score" required>
                 </label><br><br>
                 <input type="submit" class="form-control" value="添加试题"
                        style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">

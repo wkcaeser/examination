@@ -9,6 +9,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,5 +60,14 @@ public class ExamServiceImpl implements ExamServiceBs {
 	@Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
 	public void updateExam(Exam exam) {
 		examMapper.update(exam);
+	}
+
+	@Override
+	public boolean checkTimeOfDoExam(int examId) {
+		Map<String, Object> examInfo = examMapper.selectById(examId);
+		long now = Instant.now().toEpochMilli() + 8*60*60000;
+		long startTime = ((Timestamp)examInfo.get("time")).getTime();
+		long endTime = startTime + Long.parseLong(examInfo.get("duration").toString()) * 60000;
+		return now>=startTime && now<endTime;
 	}
 }

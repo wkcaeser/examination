@@ -60,7 +60,9 @@
         b.id AS lesson_id,
         c.id AS teacher_id,
         d.id AS department_id,
-        f.id AS major_id
+        f.id AS major_id,
+        a.releaseTime AS time,
+        a.duration AS duration
         FROM exam a
         LEFT JOIN lesson b ON a.lesson_id = b.id
         LEFT JOIN user c ON b.teacher_id = c.id

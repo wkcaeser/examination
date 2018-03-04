@@ -8,3 +8,29 @@ li:hover {
     background: green;
     padding: 10px;
 }
+
+.infoTableTd tr:hover {
+    /*display: block;*/
+    background: honeydew;
+    padding: 10px;
+
+}
+
+.lessonAddButton h4:hover {
+    /*display: block;*/
+    background: yellow;
+    padding: 10px;
+
+}
+
+.examQuestionEditDiv {
+    position: fixed;
+    top: 12%;
+    bottom: 8%;
+    width: 100%;
+    height: 80%;
+    padding-top: 2%;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-color: white;
+}

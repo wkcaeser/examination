@@ -94,24 +94,44 @@ public class TeacherController {
 
 	@PostMapping("/exam/delete/{examId}")
 	public ResponseData deleteExam(@PathVariable("examId") Integer examId){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(examId);
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
 		examServiceBs.deleteExam(examId);
 		return new ResponseData.Builder().build();
 	}
 
 	@PostMapping("/exam/update")
 	public ResponseData updateExam(Exam exam){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(Integer.parseInt(exam.getId().toString()));
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
 		examServiceBs.updateExam(exam);
 		return new ResponseData.Builder().build();
 	}
 
 	@PostMapping("/question/choice/add")
 	public ResponseData addNewChoiceQuestion(String description, String optionA, String optionB, String optionC, String optionD, String answer, int score, int exam_id){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(exam_id);
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
 		choiceQuestionServiceBs.addNewChoiceQuestion(description, optionA, optionB, optionC, optionD, answer, score, exam_id);
 		return new ResponseData.Builder().build();
 	}
 
 	@PostMapping("/question/objective/add")
 	public ResponseData addNewChoiceQuestion(String description, int score, int exam_id){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(exam_id);
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
 		objectiveQuestionServiceBs.addNewObjectiveQuestion(description, score, exam_id);
 		return new ResponseData.Builder().build();
 	}
@@ -124,8 +144,13 @@ public class TeacherController {
 				.build();
 	}
 
-	@PostMapping("/question/delete/{id}")
-	public ResponseData deleteExamQuestion(@PathVariable("id") int id){
+	@PostMapping("/question/delete/{examId}/{id}")
+	public ResponseData deleteExamQuestion(@PathVariable("examId") int examId, @PathVariable("id") int id){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(examId);
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
 		examInfoServiceBs.deleteExamInfo(id);
 		return new ResponseData.Builder().build();
 	}

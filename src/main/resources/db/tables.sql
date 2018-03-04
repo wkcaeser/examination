@@ -113,3 +113,16 @@ CREATE TABLE examInfo(
   INDEX (exam_id),
   INDEX (question_id)
 )ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '试卷试题';
+
+CREATE TABLE answerInfo(
+  id INT NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  exam_id INT NOT NULL COMMENT '试卷id',
+  user_id INT NOT NULL COMMENT '考试学生id',
+  answer TEXT NOT NULL COMMENT '答案',
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '状态 0：正常   -1：删除 1：交卷',
+  created_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (id),
+  INDEX (exam_id),
+  INDEX (user_id)
+)ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '答题信息';

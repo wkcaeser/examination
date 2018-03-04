@@ -280,7 +280,10 @@ var teacher = new Vue({
                     alert("修改考试信息成功");
                     _this.showExamAddPage();
                     _this.getExamList();
-                }else if(responseCode === 555){
+                }else if(response.data.status.code === 777){
+                    alert("考试已开始,不可修改");
+                }
+                else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
                     alert("修改考试信息失败");
@@ -297,7 +300,10 @@ var teacher = new Vue({
                 if(responseCode === 200){
                     alert("删除成功");
                     _this.getExamList();
-                }else if(responseCode === 555){
+                }else if(response.data.status.code === 777){
+                    alert("考试已开始,不可修改");
+                }
+                else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
                     alert("修改失败");
@@ -397,7 +403,10 @@ var teacher = new Vue({
                     alert("添加选择题成功");
                     _this.showNewChoiceQuestionAddDiv();
                     _this.getExamQuestionList(_this.examInfoOfEdited.id, 1);
-                }else if(responseCode === 555){
+                }else if(response.data.status.code === 777){
+                    alert("考试已开始,不可修改");
+                }
+                else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
                     alert("添加选择题失败");
@@ -417,7 +426,10 @@ var teacher = new Vue({
                     alert("添加客观题题成功");
                     _this.showNewObjectiveQuestionAddDivControl();
                     _this.getExamQuestionList(_this.examInfoOfEdited.id, 2);
-                }else if(responseCode === 555){
+                }else if(response.data.status.code === 777){
+                    alert("考试已开始,不可修改");
+                }
+                else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
                     alert("添加客观题失败");
@@ -427,9 +439,9 @@ var teacher = new Vue({
                 alert("网络错误");
             })
         },
-        deleteExamQuestion : function (id, type) {
+        deleteExamQuestion : function (id, type, examId) {
             var _this = this;
-            axios.post("/service/teacher/question/delete/" + id).then(function (response) {
+            axios.post("/service/teacher/question/delete/" + examId + "/" + id).then(function (response) {
                 var responseCode = response.data.status.code;
                 if(responseCode === 200){
                     alert("删除成功");
@@ -438,7 +450,10 @@ var teacher = new Vue({
                     }else if(type === 2){
                         _this.getExamQuestionList(_this.examInfoOfEdited.id, 2);
                     }
-                }else if(responseCode === 555){
+                }else if(response.data.status.code === 777){
+                    alert("考试已开始,不可修改");
+                }
+                else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
                     alert("删除失败");

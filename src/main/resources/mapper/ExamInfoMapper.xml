@@ -2,23 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wk.system.examination.entity.dao.ExamInfoMapper">
     <insert id="insert" parameterType="examInfo">
-        INSERT INTO examinfo(exam_id, question_id, type)
+        INSERT INTO examInfo(exam_id, question_id, type)
                 VALUES (#{exam_id}, #{question_id}, #{type})
     </insert>
 
     <update id="delete">
-        UPDATE examinfo SET status = -1
+        UPDATE examInfo SET status = -1
         WHERE id = #{id}
     </update>
 
     <select id="getExamQuestionsByExamIdAndType" resultType="map">
         SELECT a.id AS examInfoId, b.*
-        FROM examinfo a
+        FROM examInfo a
         <if test="type == 1">
-            LEFT JOIN choicequestion b ON a.question_id = b.id
+            LEFT JOIN choiceQuestion b ON a.question_id = b.id
         </if>
         <if test="type == 2">
-            LEFT JOIN objectivequestion b ON a.question_id = b.id
+            LEFT JOIN objectiveQuestion b ON a.question_id = b.id
         </if>
         WHERE a.exam_id = #{examId} AND a.type = #{type} AND a.status = 0
     </select>

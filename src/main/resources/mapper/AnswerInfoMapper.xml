@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wk.system.examination.entity.dao.AnswerInfoMapper">
+    <insert id="insert" parameterType="answerInfo">
+        INSERT INTO answerInfo(exam_id, user_id, answer) VALUES (#{exam_id}, #{user_id}, #{answer})
+    </insert>
+
+    <update id="update">
+        UPDATE answerInfo SET 1=1
+        <if test="answer">
+            , answer = #{answer}
+        </if>
+        <if test="status">
+            , status = #{status}
+        </if>
+        WHERE exam_id = #{exam_id} AND user_id = #{user_id} AND status = 0
+    </update>
+</mapper>

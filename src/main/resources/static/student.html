@@ -35,16 +35,139 @@
                     </tbody>
                 </table>
                 <ul class="list-group" style="margin-top: 30% ">
-                    <li class="list-group-item" >课程管理</li>
-                    <li class="list-group-item" >试卷管理</li>
+                    <li class="list-group-item" >考试列表</li>
                     <li class="list-group-item" >成绩管理</li>
                 </ul>
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-7 rightDiv">
-
+                <div class="rollControl" style="height: 100%">
+                    <div v-show="pageSwitchControl.examListDiv" class="showPageDiv">
+                        <table class="table">
+                            <caption style="font-weight: 200" class="lessonAddButton">
+                                <h2 style="display: inline">个人试卷</h2>
+                                <h4 class="btn btn-primary" style="display: inline; margin-left:60%; margin-right: 10%" >按钮</h4>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>试卷名称</th>
+                                <th>课程名称</th>
+                                <th>教师</th>
+                                <th>学院</th>
+                                <th>专业</th>
+                                <th>时间</th>
+                                <th>时长</th>
+                            </tr>
+                            </thead>
+                            <tbody class="infoTableTd">
+                            <tr v-for="(val) in examList">
+                                <td>{{val.name}}</td>
+                                <td>{{val.lesson_name}}</td>
+                                <td>{{val.teacher_name}}</td>
+                                <td>{{val.department_name}}</td>
+                                <td>{{val.major_name}}</td>
+                                <td>{{header.getTimeFormat(val.time) }}</td>
+                                <td>{{val.duration + '分钟'}}</td>
+                                <td class="btn btn-primary" @click="startExam(val)">开始考试</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <div class="col-md-1"></div>
+        </div>
+    </div>
+
+    <!--弹出层  考试页面-->
+    <div v-if="examDoPageControl" class="examQuestionEditDiv rollControl">
+        <div>
+            <table class="table">
+                <caption>
+                    <h2 style="display: inline">考试信息</h2>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%">交卷</h4>
+                </caption>
+                <thead>
+                <tr>
+                    <th>试卷名称</th>
+                    <th>课程名称</th>
+                    <th>教师</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>时间</th>
+                    <th>时长</th>
+                    <th>总分</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr>
+                    <td>{{examInfoOfEdited.name}}</td>
+                    <td>{{examInfoOfEdited.lesson_name}}</td>
+                    <td>{{examInfoOfEdited.teacher_name}}</td>
+                    <td>{{examInfoOfEdited.department_name}}</td>
+                    <td>{{examInfoOfEdited.major_name}}</td>
+                    <td>{{header.getTimeFormat(examInfoOfEdited.time) }}</td>
+                    <td>{{examInfoOfEdited.duration + '分钟'}}</td>
+                    <td>{{maxScore}}</td>
+                </tr>
+                </tbody>
+            </table><br><br>
+            <div style="width: 100%; height: 100%">
+                <h3>选择题</h3>
+                <div class="list-group" v-for="(val, index) in choiceQuestions">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">
+                            {{index+1}}、{{val.description}}({{val.score}} 分)
+                        </h4>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            A：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionA}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            B：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionB}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            C：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionC}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            D：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionD}}
+                        </p>
+                    </a>
+                </div>
+            </div>
+            <h3>客观题</h3>
+            <div class="list-group" v-for="(val, index) in objectiveQuestions">
+                <div class="list-group-item active">
+                    <h4 class="list-group-item-heading">
+                        {{index+1}}、{{val.description}}({{val.score}} 分)
+                    </h4>
+                    <div style="height: 100%;width: 100%">
+                        <label style="width: 100%; height: 100%">
+                            <input type="text" style="width: 100%; height: 100px" v-model="val.answer">
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br><br><br>
         </div>
     </div>
 </div>

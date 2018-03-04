@@ -5,7 +5,7 @@
         <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
             SELECT LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO objectivequestion(description, score, department_id, major_id, teacher_id)
+        INSERT INTO objectiveQuestion(description, score, department_id, major_id, teacher_id)
                 VALUES (#{description}, #{score} , #{department_id}, #{major_id}, #{teacher_id})
     </insert>
 </mapper>

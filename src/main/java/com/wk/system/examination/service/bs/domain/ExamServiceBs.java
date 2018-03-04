@@ -40,4 +40,6 @@ public interface ExamServiceBs {
 	 * @param exam 考试信息
 	 */
 	void updateExam(Exam exam);
+
+	boolean checkTimeOfDoExam(int examId);
 }

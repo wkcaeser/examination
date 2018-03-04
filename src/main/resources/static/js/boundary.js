@@ -48,6 +48,12 @@ var header = new Vue({
         },
         toWelcomePage : function () {
             window.location.href = "/index.html";
+        },
+        getTimeFormat : function (date) {
+            var d = new Date(date);
+            var offSetMill = d.getTimezoneOffset() * 60000;
+            d = new Date(d.getTime() + offSetMill);
+            return d.toLocaleDateString() + " " + d.toLocaleTimeString();
         }
     }
 });
