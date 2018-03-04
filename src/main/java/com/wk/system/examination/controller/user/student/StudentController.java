@@ -2,6 +2,7 @@ package com.wk.system.examination.controller.user.student;
 
 import com.wk.system.examination.entity.vo.ResponseCode;
 import com.wk.system.examination.entity.vo.ResponseData;
+import com.wk.system.examination.service.bs.domain.AnswerInfoServiceBs;
 import com.wk.system.examination.service.bs.domain.ExamServiceBs;
 import com.wk.system.examination.service.bs.users.student.StudentServiceBs;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,13 @@ public class StudentController {
 	private final StudentServiceBs studentServiceBs;
 
 	private final ExamServiceBs examServiceBs;
+
+	private final AnswerInfoServiceBs answerInfoServiceBs;
 	@Autowired
-	public StudentController(StudentServiceBs studentServiceBs, ExamServiceBs examServiceBs) {
+	public StudentController(StudentServiceBs studentServiceBs, ExamServiceBs examServiceBs, AnswerInfoServiceBs answerInfoServiceBs) {
 		this.studentServiceBs = studentServiceBs;
 		this.examServiceBs = examServiceBs;
+		this.answerInfoServiceBs = answerInfoServiceBs;
 	}
 
 	@GetMapping("/info/{username}")
@@ -48,5 +52,22 @@ public class StudentController {
 		}
 		Map examQuestions = studentServiceBs.getExamInfo(examId);
 		return responseBuilder.data(examQuestions).build();
+	}
+
+	@PostMapping("/exam/answer")
+	public ResponseData submitAnswer(@RequestBody Map<String, Object> dataMap){
+		boolean timeIsCorrect = examServiceBs.checkTimeOfDoExam(Integer.parseInt(dataMap.get("exam_id").toString()));
+		ResponseData.Builder responseBuilder = new ResponseData.Builder();
+		if(!timeIsCorrect){
+			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
+		}
+		answerInfoServiceBs.submitAnswer(dataMap);
+		return new ResponseData.Builder().build();
+	}
+
+	@GetMapping("/exam/{examId}/{userId}")
+	public ResponseData submitAnswer(@PathVariable("examId")int examId, @PathVariable("userId") int userId){
+		List answer = answerInfoServiceBs.getAnswer(examId, userId);
+		return new ResponseData.Builder().data(answer).build();
 	}
 }

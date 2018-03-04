@@ -31,9 +31,10 @@ public class StudentServiceImpl implements StudentServiceBs {
 	public Map<String, List<Map<String, Object>>> getExamInfo(int examId) {
 		Map<String, List<Map<String, Object>>> examQuestions = new HashMap<>();
 		List<Map<String, Object>> choiceQuestions = examInfoMapper.getExamQuestionsByExamIdAndType(examId, QuestionTypeCode.TYPE_CHOICE.getValue());
-		choiceQuestions.forEach(obj -> obj.remove("answer"));
+		choiceQuestions.forEach(obj -> obj.put("answer", ""));
 		examQuestions.put("choiceQuestions", choiceQuestions);
 		List<Map<String, Object>> objectiveQuestions = examInfoMapper.getExamQuestionsByExamIdAndType(examId, QuestionTypeCode.TYPE_OBJECTIVE.getValue());
+		objectiveQuestions.forEach(obj -> obj.put("answer", ""));
 		examQuestions.put("objectiveQuestions", objectiveQuestions);
 		return examQuestions;
 	}

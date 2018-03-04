@@ -15,4 +15,10 @@
         </if>
         WHERE exam_id = #{exam_id} AND user_id = #{user_id} AND status = 0
     </update>
+
+    <select id="selectByExamIdAndUserId" resultType="map">
+        SELECT *
+        FROM answerInfo
+        WHERE exam_id = #{examId} AND user_id = #{userId}
+    </select>
 </mapper>

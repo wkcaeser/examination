@@ -199,59 +199,81 @@
                 </tr>
                 </tbody>
             </table><br><br>
-            <table class="table">
-                <caption>
-                    <h4 style="display: inline">考试题----选择题</h4>
-                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="showNewChoiceQuestionAddDiv">添加</h4>
-                </caption>
-                <thead>
-                <tr>
-                    <th>题目描述</th>
-                    <th>选项A</th>
-                    <th>选项B</th>
-                    <th>选项C</th>
-                    <th>选项D</th>
-                    <th>正确答案</th>
-                    <th>分值</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody class="infoTableTd">
-                <tr v-for="(val) in choiceQuestions">
-                    <td>{{val.description}}</td>
-                    <td>{{val.optionA}}</td>
-                    <td>{{val.optionB}}</td>
-                    <td>{{val.optionC}}</td>
-                    <td>{{val.optionD}}</td>
-                    <td>{{
+            <div style="width: 100%; height: 100%">
+                <div style="width: 100%; height: 100%">
+                    <h3 style="display: inline">选择题</h3>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:90%; margin-right: 10%" @click="showNewChoiceQuestionAddDiv">添加</h4>
+                </div>
+                <br>
+                <div class="list-group" v-for="(val, index) in choiceQuestions">
+                    <div href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">
+                            <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
+                        </h4>
+                        <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0%" @click="deleteExamQuestion(val.examInfoId, 1, examInfoOfEdited.id)">删除</label>
+                    </div>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            A：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionA}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            B：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionB}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            C：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionC}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <h4 class="list-group-item-heading" style="display: inline">
+                            D：
+                        </h4>
+                        <p class="list-group-item-text" style="display: inline">
+                            {{val.optionD}}
+                        </p>
+                    </a>
+                    <a href="#" class="list-group-item">
+                    <h4 class="list-group-item-heading" style="display: inline">
+                        答案：
+                    </h4>
+                    <p class="list-group-item-text" style="display: inline">
+                        {{
                         String.fromCharCode("A".charCodeAt() + val.answer - 1)
-                        }}</td>
-                    <td>{{val.score}}</td>
-                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 1, examInfoOfEdited.id)">删除</td>
-                </tr>
-                </tbody>
-            </table>
-            <table class="table">
-                <caption>
-                    <h4 style="display: inline">考试题----主观题</h4>
-                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="showNewObjectiveQuestionAddDivControl">添加</h4>
-                </caption>
-                <thead>
-                <tr>
-                    <th>题目描述</th>
-                    <th>分值</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody class="infoTableTd">
-                <tr  v-for="(val) in objectiveQuestions">
-                    <td>{{val.description}}</td>
-                    <td>{{val.score}}</td>
-                    <td class="btn btn-primary" @click="deleteExamQuestion(val.examInfoId, 2, examInfoOfEdited.id)">删除</td>
-                </tr>
-                </tbody>
-            </table>
-
+                        }}
+                    </p>
+                    </a>
+                </div>
+            </div>
+            <div style="width: 100%; height: 100%">
+                <h3 style="display: inline">客观题</h3>
+                <h4 class="btn btn-primary" style="display: inline; margin-left:90%; margin-right: 10%" @click="showNewObjectiveQuestionAddDivControl">添加</h4>
+            </div>
+            <br>
+            <div class="list-group" v-for="(val, index) in objectiveQuestions">
+                <div class="list-group-item active">
+                    <h4 class="list-group-item-heading">
+                        <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
+                    </h4>
+                    <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0%" @click="deleteExamQuestion(val.examInfoId, 2, examInfoOfEdited.id)">删除</label>
+                    <div style="height: 100%;width: 100%">
+                        <label style="width: 100%; height: 100%;">
+                            <input type="text" style="width: 100%; height: 100px">
+                        </label>
+                    </div>
+                </div>
+            </div>
             <br><br><br>
         </div>
     </div>
