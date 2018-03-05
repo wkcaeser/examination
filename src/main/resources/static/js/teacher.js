@@ -119,6 +119,50 @@ var teacher = new Vue({
             id : "",
             description : "",
             score : ""
+        },
+        examOfFinished : {
+            id : "",
+            name : "",
+            lesson_name : "",
+            teacher_name : "",
+            department_name : "",
+            major_name : "",
+            time : "",
+            duration : ""
+        },
+        studentInfoOfFinishExam: {
+            id : "",
+            username : "",
+            name : "",
+            department_name : "",
+            major_name : ""
+        },
+        studentInfoOfFinishExamControl : false,
+        answerOfStudentDivControl : false,
+        objectiveQuestionOfStudentDone : {
+            description : "",
+            score : "",
+            exam_id : "",
+            answer : "",
+            scoreOfGet : ""
+        },
+        answers : {
+            user_id : "",
+            exam_id : "",
+            choiceAnswers : [],
+            objectiveAnswers : []
+        },
+        scoreOfStudent : {
+            student_id : "",
+            exam_id : "",
+            score : 0
+        },
+        studentInfoIsDone: {
+            id : "",
+            username : "",
+            name : "",
+            department_name : "",
+            major_name : ""
         }
     },
     mounted : function () {
@@ -138,7 +182,7 @@ var teacher = new Vue({
             this.getExamList();
         }, deep: true},
         'pageShowController.scorePage' :{handler : function () {
-            console.log("score");
+            this.getFinishedExam();
         }, deep: true}
     },
     methods : {
@@ -462,6 +506,124 @@ var teacher = new Vue({
                 console.log(error);
                 alert("网络错误");
             })
+        },
+        getFinishedExam : function () {
+            var _this = this;
+            _this.examQueryParams.teacher_id = _this.teacherInfo.id;
+            var params = header.requestDataParserOfGet(_this.examQueryParams);
+            axios.get("/service/teacher/exam/finished" + params).then(function (response) {
+                if(response.data.status.code === 200){
+                    _this.examOfFinished = response.data.data;
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }
+                else {
+                    alert("考试查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        getStudentInfoOfFinishExam : function (examId) {
+            var _this = this;
+            axios.get("/service/teacher/studentInfo/" + examId).then(function (response) {
+                if(response.data.status.code === 200){
+                    _this.studentInfoOfFinishExam = response.data.data;
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }
+                else {
+                    alert("查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        studentInfoDivSwitch : function (exam) {
+            this.studentInfoOfFinishExamControl = !(this.studentInfoOfFinishExamControl);
+            if(this.studentInfoOfFinishExamControl){
+                this.getStudentInfoOfFinishExam(exam.id);
+                this.examInfoOfEdited = exam;
+            }
+        },
+        getObjectiveQuestionOfStudentDone : function (examId) {
+            var _this = this;
+            axios.get("/service/teacher/question/"+examId+"/2").then(function (response) {
+                var responseCode = response.data.status.code;
+                if(responseCode === 200){
+                   _this.objectiveQuestionOfStudentDone = response.data.data;
+                }else if(responseCode === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        getStudentAnswer : function (studentId, examId) {
+            var _this = this;
+            axios.get("/service/teacher/answer/" + examId + "/" +studentId).then(function (response) {
+                if(response.data.status.code === 200){
+                    if(response.data.data.length > 0) {
+                        _this.answers = response.data.data[0];
+                        _this.setObjectiveAnswer(_this.answers);
+                    }
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("历史答案查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        getAnswerById : function (id, answerArray) {
+            for (var i=0; i<answerArray.length; i++){
+                var json = JSON.parse(answerArray[i]);
+                if(json.id === id + ""){
+                    return json.answer;
+                }
+            }
+            return "";
+        },
+        setObjectiveAnswer : function (answer) {
+            answer = JSON.parse(answer.answer);
+            var objectives = answer.objectiveAnswers;
+            for(var i=0; i<this.objectiveQuestionOfStudentDone.length; i++){
+                this.objectiveQuestionOfStudentDone[i].answer = this.getAnswerById(this.objectiveQuestionOfStudentDone[i].id, objectives);
+            }
+        },
+        answerOfStudentDivSwitch : function (student) {
+            this.answerOfStudentDivControl = !(this.answerOfStudentDivControl);
+            if(this.answerOfStudentDivControl === true){
+                this.studentInfoIsDone = student;
+                this.getObjectiveQuestionOfStudentDone(this.examInfoOfEdited.id);
+                this.getStudentAnswer(student.id, this.examInfoOfEdited.id);
+            }
+        },
+        submitAnswer : function () {
+            var _this = this;
+            _this.scoreOfStudent.exam_id = _this.examInfoOfEdited.id;
+            _this.scoreOfStudent.student_id = _this.studentInfoIsDone.id;
+            _this.scoreOfStudent.score = 0;
+            for(var i=0; i<_this.objectiveQuestionOfStudentDone.length; i++){
+                if(_this.objectiveQuestionOfStudentDone[i].scoreOfGet === ""){
+                    alert("题目 " + i + " 未判分!!!");
+                    return;
+                }
+                if(_this.objectiveQuestionOfStudentDone[i].scoreOfGet < 0
+                    || _this.objectiveQuestionOfStudentDone[i].scoreOfGet > _this.objectiveQuestionOfStudentDone[i].score){
+                    alert("题目 " + i + " 判分不合法!!!");
+                    return;
+                }
+                _this.scoreOfStudent.score += _this.objectiveQuestionOfStudentDone[i].scoreOfGet - 0;
+            }
+            console.log(_this.scoreOfStudent);
         }
     }
 });

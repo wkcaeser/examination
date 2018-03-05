@@ -44,4 +44,6 @@ public interface ExamServiceBs {
 	boolean checkTimeOfDoExam(int examId);
 
 	boolean checkExamIsStart(int examId);
+
+	boolean checkExamIsEnd(int examId);
 }

@@ -78,4 +78,13 @@ public class ExamServiceImpl implements ExamServiceBs {
 		long startTime = ((Timestamp)examInfo.get("time")).getTime();
 		return now>=startTime;
 	}
+
+	@Override
+	public boolean checkExamIsEnd(int examId) {
+		Map<String, Object> examInfo = examMapper.selectById(examId);
+		long now = Instant.now().toEpochMilli() + 8*60*60000;
+		long startTime = ((Timestamp)examInfo.get("time")).getTime();
+		long endTime = startTime + Long.parseLong(examInfo.get("duration").toString()) * 60000;
+		return now > endTime;
+	}
 }

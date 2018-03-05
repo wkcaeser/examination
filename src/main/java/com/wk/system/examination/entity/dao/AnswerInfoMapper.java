@@ -15,4 +15,6 @@ public interface AnswerInfoMapper {
 	void update(@Param("answer") String answer, @Param("status") Integer status,
 	            @Param("user_id") Integer userId, @Param("exam_id")Integer examId
 	            );
+
+	List<Map<String, Object>> selectStudentInfosByExamId(@Param("examId") int examId);
 }

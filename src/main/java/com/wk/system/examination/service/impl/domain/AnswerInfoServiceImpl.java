@@ -45,4 +45,9 @@ public class AnswerInfoServiceImpl implements AnswerInfoServiceBs {
 	public List<Map<String, Object>> getAnswer(int examId, int userId) {
 		return answerInfoMapper.selectByExamIdAndUserId(examId, userId);
 	}
+
+	@Override
+	public List<Map<String, Object>> getStudentInfosByExamId(int examId) {
+		return answerInfoMapper.selectStudentInfosByExamId(examId);
+	}
 }

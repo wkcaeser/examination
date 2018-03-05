@@ -125,3 +125,16 @@ CREATE TABLE answerInfo(
   PRIMARY KEY (id),
   UNIQUE (exam_id, user_id)
 )ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '答题信息';
+
+CREATE TABLE score(
+  id INT NOT NULL AUTO_INCREMENT COMMENT '自增id',
+  exam_id INT NOT NULL COMMENT '试卷id',
+  user_id INT NOT NULL COMMENT '用户id',
+  score_choice INT NOT NULL COMMENT '选择题分数',
+  score_objective INT NOT NULL COMMENT '客观题分数',
+  status TINYINT NOT NULL DEFAULT 0 COMMENT '状态 0:正常',
+  created_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (id),
+  UNIQUE (exam_id, user_id)
+)ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '答题信息';

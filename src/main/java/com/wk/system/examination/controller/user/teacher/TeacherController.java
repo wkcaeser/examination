@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/service/teacher")
@@ -28,14 +29,17 @@ public class TeacherController {
 
 	private final ExamInfoServiceBs examInfoServiceBs;
 
+	private final AnswerInfoServiceBs answerInfoServiceBs;
+
 	@Autowired
-	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs, ExamServiceBs examServiceBs, ObjectiveQuestionServiceBs objectiveQuestionServiceBs, ChoiceQuestionServiceBs choiceQuestionServiceBs, ExamInfoServiceBs examInfoServiceBs) {
+	public TeacherController(TeacherServiceBs teacherServiceBs, LessonServiceBs lessonServiceBs, ExamServiceBs examServiceBs, ObjectiveQuestionServiceBs objectiveQuestionServiceBs, ChoiceQuestionServiceBs choiceQuestionServiceBs, ExamInfoServiceBs examInfoServiceBs, AnswerInfoServiceBs answerInfoServiceBs) {
 		this.teacherServiceBs = teacherServiceBs;
 		this.lessonServiceBs = lessonServiceBs;
 		this.examServiceBs = examServiceBs;
 		this.objectiveQuestionServiceBs = objectiveQuestionServiceBs;
 		this.choiceQuestionServiceBs = choiceQuestionServiceBs;
 		this.examInfoServiceBs = examInfoServiceBs;
+		this.answerInfoServiceBs = answerInfoServiceBs;
 	}
 
 	@GetMapping("/info/{username}")
@@ -87,6 +91,9 @@ public class TeacherController {
 
 	@PostMapping("/exam/add")
 	public ResponseData addExam(Exam exam){
+		if(exam.getReleaseTime() == null){
+			return new ResponseData.Builder().statusCode(ResponseCode.CODE_PARAM_ERROR).build();
+		}
 		examServiceBs.addExam(exam);
 		return new ResponseData.Builder().build();
 	}
@@ -109,8 +116,11 @@ public class TeacherController {
 		if(examIsStart){
 			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
 		}
+		if(exam.getReleaseTime() == null){
+			return responseBuilder.statusCode(ResponseCode.CODE_PARAM_ERROR).build();
+		}
 		examServiceBs.updateExam(exam);
-		return new ResponseData.Builder().build();
+		return responseBuilder.build();
 	}
 
 	@PostMapping("/question/choice/add")
@@ -138,6 +148,7 @@ public class TeacherController {
 	@GetMapping("/question/{examId}/{type}")
 	public ResponseData getExamQuestionsByIdAndType(@PathVariable("examId") int examId, @PathVariable("type") int type){
 		List<Map<String, Object>> res = examInfoServiceBs.getExamQuestionByExamIdAndType(examId, type);
+		res.forEach(obj -> obj.put("answer", ""));
 		return new ResponseData.Builder()
 				.data(res)
 				.build();
@@ -151,6 +162,38 @@ public class TeacherController {
 			return responseBuilder.statusCode(ResponseCode.CODE_EXAM_TIME_ERROR).build();
 		}
 		examInfoServiceBs.deleteExamInfo(id);
+		return new ResponseData.Builder().build();
+	}
+
+	@GetMapping("/exam/finished")
+	public ResponseData getExamOfFinished(@RequestParam(value = "teacher_id", required = false) Integer teacherId,
+	                                      @RequestParam(value = "department_id", required = false) Integer departmentId,
+	                                      @RequestParam(value = "major_id", required = false) Integer majorId,
+	                                      @RequestParam(value = "lesson_id", required = false) Integer lessonId,
+	                                      @RequestParam(value = "name", required = false) String name){
+		List<Map<String, Object>> res = examServiceBs.getExamList(teacherId, departmentId, majorId, lessonId, name);
+		res = res.stream()
+				.filter(obj -> examServiceBs.checkExamIsEnd(Integer.parseInt(obj.get("id").toString())))
+				.collect(Collectors.toList());
+		return new ResponseData.Builder()
+				.data(res)
+				.build();
+	}
+
+	@GetMapping("/studentInfo/{examId}")
+	public ResponseData getStudentInfoOfFinishExam(@PathVariable("examId") int examId){
+		List res = answerInfoServiceBs.getStudentInfosByExamId(examId);
+		return new ResponseData.Builder().data(res).build();
+	}
+
+	@GetMapping("/answer/{examId}/{userId}")
+	public ResponseData getAnswer(@PathVariable("examId") int examId, @PathVariable("userId") int userId){
+		List answer = answerInfoServiceBs.getAnswer(examId, userId);
+		return new ResponseData.Builder().data(answer).build();
+	}
+
+	@PostMapping("/exam/score")
+	public ResponseData setScore(int student_id, int exam_id, int score){
 		return new ResponseData.Builder().build();
 	}
 }

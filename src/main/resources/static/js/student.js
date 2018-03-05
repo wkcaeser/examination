@@ -56,14 +56,16 @@ var student = new Vue({
             department_name : "",
             major_name : "",
             time : "",
-            duration : ""
+            duration : "",
+            scoreOfGet : ""
         },
         answers : {
             user_id : "",
             exam_id : "",
             choiceAnswers : [],
             objectiveAnswers : []
-        }
+        },
+        interval : ""
     },
     mounted : function () {
         this.getStudentInfo();
@@ -74,7 +76,11 @@ var student = new Vue({
             this.getExamList();
         }, deep: true},
         'examDoPageControl' : {handler : function () {
-            this.autoSubmit();
+            if (this.examDoPageControl) {
+                this.interval = window.setInterval(this.autoSubmit, 60000);
+            }else {
+                window.clearInterval(this.interval);
+            }
         }}
     },
     methods : {
@@ -126,11 +132,11 @@ var student = new Vue({
             var _this = this;
             axios.get("/service/student/exam/do/getQuestionList/" + examInfo.id).then(function (response) {
                 if(response.data.status.code === 200){
+                    _this.examInfoOfEdited = examInfo;
                     _this.examDoPageControl = true;
                     _this.choiceQuestions = response.data.data.choiceQuestions;
                     _this.objectiveQuestions = response.data.data.objectiveQuestions;
                     _this.maxScore = 0;
-                    _this.examInfoOfEdited = examInfo;
                     for(var i=0; i < _this.choiceQuestions.length; i++){
                         _this.maxScore += _this.choiceQuestions[i].score;
                     }
@@ -166,15 +172,14 @@ var student = new Vue({
             axios.post("/service/student/exam/answer", this.answers);
         },
         autoSubmit : function () {
-            while (examDoPageControl){
-                var startTime = new Date(this.examInfoOfEdited.time).getTime();
+            if (this.examDoPageControl){
+                var startTime = new Date(this.examInfoOfEdited.time);
                 var offSerMill = startTime.getTimezoneOffset() * 60000;
-                startTime = startTime + offSerMill;
-                var endTime = startTime + this.duration * 60000;
+                startTime = startTime.getTime() + offSerMill;
+                var endTime = startTime + this.examInfoOfEdited.duration * 60000;
                 var now = new Date().getTime();
-                if(now > startTime && now < endTime){
+                if(now >= startTime && now <= endTime){
                     this.submitAnswer();
-                    setTimeout("autoSubmit()", 10000);
                 }else {
                     this.examDoPageControl = false;
                 }

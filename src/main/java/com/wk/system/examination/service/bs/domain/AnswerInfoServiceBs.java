@@ -7,4 +7,6 @@ public interface AnswerInfoServiceBs {
 	void submitAnswer(Map<String, Object> answer);
 
 	List<Map<String, Object>> getAnswer(int examId, int userId);
+
+	List<Map<String, Object>> getStudentInfosByExamId(int examId);
 }

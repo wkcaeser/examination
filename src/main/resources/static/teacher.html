@@ -102,7 +102,35 @@
                             </tbody>
                         </table>
                     </div>
-                    <div v-show="pageShowController.scorePage" class="showPageDiv">score</div>
+                    <div v-show="pageShowController.scorePage" class="showPageDiv">
+                        <table class="table">
+                            <caption style="font-weight: 200" class="lessonAddButton">
+                                <h2 style="display: inline">个人试卷</h2>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>试卷名称</th>
+                                <th>课程名称</th>
+                                <th>教师</th>
+                                <th>学院</th>
+                                <th>专业</th>
+                                <th>时间</th>
+                                <th>时长</th>
+                            </tr>
+                            </thead>
+                            <tbody class="infoTableTd">
+                            <tr v-for="(val) in examOfFinished" @click="studentInfoDivSwitch(val)">
+                                <td>{{val.name}}</td>
+                                <td>{{val.lesson_name}}</td>
+                                <td>{{val.teacher_name}}</td>
+                                <td>{{val.department_name}}</td>
+                                <td>{{val.major_name}}</td>
+                                <td>{{header.getTimeFormat(val.time)}}</td>
+                                <td>{{val.duration + '分钟'}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="col-md-1"></div>
@@ -338,6 +366,95 @@
                        style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
                 <div><a @click="showNewObjectiveQuestionAddDivControl">退出</a></div><br><br><br><br>
             </form>
+        </div>
+    </div>
+    <!--考试学生界面-->
+    <div v-if="studentInfoOfFinishExamControl" class="examQuestionEditDiv rollControl">
+        <div>
+            <table class="table">
+                <caption>
+                    <h2 style="display: inline">考试信息</h2>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:83%; margin-right: 10%" @click="studentInfoDivSwitch('')">退出</h4>
+                </caption>
+                <thead>
+                <tr>
+                    <th>试卷名称</th>
+                    <th>课程名称</th>
+                    <th>教师</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>时间</th>
+                    <th>时长</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr>
+                    <td>{{examInfoOfEdited.name}}</td>
+                    <td>{{examInfoOfEdited.lesson_name}}</td>
+                    <td>{{examInfoOfEdited.teacher_name}}</td>
+                    <td>{{examInfoOfEdited.department_name}}</td>
+                    <td>{{examInfoOfEdited.major_name}}</td>
+                    <td>{{header.getTimeFormat(examInfoOfEdited.time) }}</td>
+                    <td>{{examInfoOfEdited.duration + '分钟'}}</td>
+                </tr>
+                </tbody>
+            </table><br><br>
+            <table class="table">
+                <caption>
+                    <h2 style="display: inline">完成考试学生信息</h2>
+                </caption>
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>得分</th>
+                </tr>
+                </thead>
+                <tbody class="infoTableTd">
+                <tr v-for="(val, index) in studentInfoOfFinishExam" @click="answerOfStudentDivSwitch(val)">
+                    <td>{{index+1}}</td>
+                    <td>{{val.username}}</td>
+                    <td>{{val.name}}</td>
+                    <td>{{val.department_name}}</td>
+                    <td>{{val.major_name}}</td>
+                    <td>{{100}}</td>
+                </tr>
+                </tbody>
+            </table><br><br>
+        </div>
+    </div>
+    <!--改卷界面-->
+    <div v-if="answerOfStudentDivControl" class="examQuestionEditDiv rollControl">
+        <div>
+            <h2 style="display: inline">客观题</h2>
+            <h3 class="btn btn-primary" style="display: inline; margin-left:80%; margin-right: 0%" @click="answerOfStudentDivSwitch('')">退出</h3>
+            <br><br><br>
+            <div class="list-group" v-for="(val, index) in objectiveQuestionOfStudentDone">
+                <div class="list-group-item active">
+                    <h4 class="list-group-item-heading">
+                        {{index+1}}、{{val.description}}({{val.score}} 分)
+                    </h4>
+                    <div class="btn btn-primary" style="background-color:red; display: block; margin-left:86%; margin-right: 1%">
+                        分数：<label style="margin-bottom: -1%">
+                        <input class="form-control" style="display: inline" v-model="val.scoreOfGet" type="number" :max="val.score" min="0" required>
+                    </label>&ensp;&ensp;&ensp;&ensp;
+                    </div>
+                    <div style="height: 100%;width: 100%">
+                        <label style="width: 100%; height: 100%">
+                            <textarea rows="20" cols="20" style="width: 100%; background-color: white; color: #0f0f0f" v-model="val.answer" disabled>
+                            </textarea>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <br><br><br>
+            <label class="btn btn-primary"
+                   style="background-color:red; display: block;height:80px; font-size: 48px; margin-left:25%; margin-right: 25%"
+                    @click="submitAnswer()">改卷完成</label>
+            <br><br><br><br><br><br>
         </div>
     </div>
 </div>
