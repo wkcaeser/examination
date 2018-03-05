@@ -42,4 +42,6 @@ public interface ExamServiceBs {
 	void updateExam(Exam exam);
 
 	boolean checkTimeOfDoExam(int examId);
+
+	boolean checkExamIsStart(int examId);
 }

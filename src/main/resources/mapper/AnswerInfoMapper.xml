@@ -6,10 +6,7 @@
     </insert>
 
     <update id="update">
-        UPDATE answerInfo SET 1=1
-        <if test="answer">
-            , answer = #{answer}
-        </if>
+        UPDATE answerInfo SET answer = #{answer}
         <if test="status">
             , status = #{status}
         </if>

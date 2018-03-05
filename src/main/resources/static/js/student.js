@@ -72,7 +72,10 @@ var student = new Vue({
     watch : {
         'pageSwitchControl.examListDiv' : {handler : function () {
             this.getExamList();
-        }, deep: true}
+        }, deep: true},
+        'examDoPageControl' : {handler : function () {
+            this.autoSubmit();
+        }}
     },
     methods : {
         getStudentInfo : function () {
@@ -110,12 +113,12 @@ var student = new Vue({
             var now = new Date().getTime();
             var startTime = new Date(examInfo.time);
             var offSetMill = startTime.getTimezoneOffset() * 60000;
-            startTime = new Date(startTime.getTime() + offSetMill);
+            startTime = startTime.getTime() + offSetMill;
             if(now < startTime){
                 alert("考试尚未开始");
                 return;
             }
-            var endTime = examInfo.time+ examInfo.duration * 6000;
+            var endTime = examInfo.time+ examInfo.duration * 60000;
             if(now > endTime){
                 alert("考试已经结束");
                 return;
@@ -163,7 +166,19 @@ var student = new Vue({
             axios.post("/service/student/exam/answer", this.answers);
         },
         autoSubmit : function () {
-            
+            while (examDoPageControl){
+                var startTime = new Date(this.examInfoOfEdited.time).getTime();
+                var offSerMill = startTime.getTimezoneOffset() * 60000;
+                startTime = startTime + offSerMill;
+                var endTime = startTime + this.duration * 60000;
+                var now = new Date().getTime();
+                if(now > startTime && now < endTime){
+                    this.submitAnswer();
+                    setTimeout("autoSubmit()", 10000);
+                }else {
+                    this.examDoPageControl = false;
+                }
+            }
         },
         getAnswer : function () {
             var _this = this;
@@ -171,7 +186,8 @@ var student = new Vue({
                 if(response.data.status.code === 200){
                     if(response.data.data.length > 0) {
                         _this.answers = response.data.data[0];
-                        _this.setAnswer(_this.answers);
+                        _this.setObjectiveAnswer(_this.answers);
+                        _this.setChoiceAnswer(_this.answers);
                     }
                 }else if(response.data.status.code === 555){
                     header.toWelcomePage();
@@ -192,23 +208,34 @@ var student = new Vue({
             }
             return "";
         },
-        setAnswer : function (answer) {
+        setObjectiveAnswer : function (answer) {
             answer = JSON.parse(answer.answer);
-            var choices = answer.choiceAnswers;
             var objectives = answer.objectiveAnswers;
             for(var i=0; i<this.objectiveQuestions.length; i++){
                 this.objectiveQuestions[i].answer = this.getAnswerById(this.objectiveQuestions[i].id, objectives);
             }
+
+        },
+        setChoiceAnswer : function (answer) {
+            answer = JSON.parse(answer.answer);
+            var choices = answer.choiceAnswers;
             for(var j=0; j<this.choiceQuestions.length; j++){
                 this.choiceQuestions[j].answer = this.getAnswerById(this.choiceQuestions[j].id, choices);
+            }
+            var choiceDivs = document.getElementById("choiceQuestionList").children;
+            for(var i=0; i<this.choiceQuestions.length; i++){
+                if(this.choiceQuestions[i].answer !== ""){
+                    var answerOptionIndex = this.choiceQuestions[i].answer.charCodeAt() - 'A'.charCodeAt() + 1;
+                    choiceDivs[i].children[answerOptionIndex].style.background = "#29dc29";
+                }
             }
         },
         exitExam : function () {
             this.submitAnswer();
             this.examDoPageControl = false;
         },
-        chooseThisOption : function (e, qustion, option) {
-            qustion.answer = option;
+        chooseThisOption : function (e, question, option) {
+            question.answer = option;
             var element = e.currentTarget;
             var brothers = element.parentNode.children;
             for (var i=1; i<brothers.length; i++){
