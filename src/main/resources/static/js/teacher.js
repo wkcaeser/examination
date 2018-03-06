@@ -347,6 +347,9 @@ var teacher = new Vue({
             })
         },
         deleteExam : function (examId) {
+            if(!confirm("删除考试？")){
+                return;
+            }
             var _this = this;
             axios.post("/service/teacher/exam/delete/" + examId).then(function (response) {
                 var responseCode = response.data.status.code;
@@ -493,6 +496,9 @@ var teacher = new Vue({
             })
         },
         deleteExamQuestion : function (id, type, examId) {
+            if(!confirm("删除考试？")){
+                return;
+            }
             var _this = this;
             axios.post("/service/teacher/question/delete/" + examId + "/" + id).then(function (response) {
                 var responseCode = response.data.status.code;

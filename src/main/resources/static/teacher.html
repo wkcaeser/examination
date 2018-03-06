@@ -52,7 +52,6 @@
                             <thead>
                             <tr>
                                 <th>课程名称</th>
-                                <th>任课教师</th>
                                 <th>归属学院</th>
                                 <th>归属专业</th>
                                 <th>时间</th>
@@ -61,7 +60,6 @@
                             <tbody class="infoTableTd">
                             <tr v-for="(val) in lessonsInfo">
                                 <td>{{val.name}}</td>
-                                <td>{{val.teacher_name}}</td>
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
                                 <td>{{new Date(val.time).toLocaleDateString()}}</td>
@@ -80,24 +78,22 @@
                             <tr>
                                 <th>试卷名称</th>
                                 <th>课程名称</th>
-                                <th>教师</th>
-                                <th>学院</th>
                                 <th>专业</th>
                                 <th>时间</th>
                                 <th>时长</th>
+                                <th>编辑</th>
+                                <th>删除</th>
                             </tr>
                             </thead>
                             <tbody class="infoTableTd">
                             <tr v-for="(val) in exams" @dblclick="showExamQuestionEditDiv(val)">
                                 <td>{{val.name}}</td>
                                 <td>{{val.lesson_name}}</td>
-                                <td>{{val.teacher_name}}</td>
-                                <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
                                 <td>{{header.getTimeFormat(val.time)}}</td>
                                 <td>{{val.duration + '分钟'}}</td>
-                                <td class="btn btn-primary" @click="showExamEditPage(val)">编辑</td>
-                                <td class="btn btn-primary" @click="deleteExam(val.id)">作废</td>
+                                <td><button class="btn btn-primary" @click="showExamEditPage(val)">编辑</button></td>
+                                <td><button class="btn btn-primary" @click="deleteExam(val.id)">作废</button></td>
                             </tr>
                             </tbody>
                         </table>
@@ -111,7 +107,6 @@
                             <tr>
                                 <th>试卷名称</th>
                                 <th>课程名称</th>
-                                <th>教师</th>
                                 <th>学院</th>
                                 <th>专业</th>
                                 <th>时间</th>
@@ -122,7 +117,6 @@
                             <tr v-for="(val) in examOfFinished" @click="studentInfoDivSwitch(val)">
                                 <td>{{val.name}}</td>
                                 <td>{{val.lesson_name}}</td>
-                                <td>{{val.teacher_name}}</td>
                                 <td>{{val.department_name}}</td>
                                 <td>{{val.major_name}}</td>
                                 <td>{{header.getTimeFormat(val.time)}}</td>
@@ -147,24 +141,39 @@
                 <h4 class="modal-title">请输入课程信息</h4>
             </div>
             <div class="modal-body">
-                <form method="post" @submit.prevent="">
-                    <span>课程名称 ： </span>
-                    <label>
-                        <input type="text" class="form-control" v-model="newLesson.name">
-                    </label><br><br>
-                    <span>归属学院 ： </span>
-                    <label>
-                        <select name="department" class="form-control" v-model="newLesson.department_id" required >
-                            <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
-                        </select>
-                    </label><br><br>
-                    <span>归属专业 ： </span>
-                    <label>
-                        <select name="major" class="form-control" v-model="newLesson.major_id" required>
-                            <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
-                        </select>
-                    </label><br><br>
-                </form>
+                <table class="table">
+                    <tbody>
+                    <tr>
+                    <td>课程名称 ： </td>
+                    <td>
+                        <label>
+                            <input type="text" class="form-control" v-model="newLesson.name">
+                        </label>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td>归属学院 ： </td>
+                        <td>
+                            <label>
+                                <select name="department" class="form-control" v-model="newLesson.department_id"
+                                        required>
+                                    <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
+                                </select>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                    <td>归属专业 ： </td>
+                        <td>
+                            <label>
+                                <select name="major" class="form-control" v-model="newLesson.major_id" required>
+                                    <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
+                                </select>
+                            </label>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" @click="showLessonAddPage">关闭</button>
@@ -183,30 +192,48 @@
                     <h4 class="modal-title">请编辑考试信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post" @submit.prevent="doExamEdit">
-                        <span>考试名称 ： </span>
-                        <label>
+                    <table>
+                        <tbody>
+                        <tr>
+                        <td>考试名称 ： </td>
+                        <td>
+                            <label>
                             <input type="text" class="form-control" v-model="newExam.name">
-                        </label><br><br>
-                        <span>所属课程 ： </span>
-                        <label>
+                            </label>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>所属课程 ： </td>
+                        <td>
+                            <label>
                             <select class="form-control" v-model="newExam.lesson_id" required >
                                 <option v-for="(val) in lessonsInfo" v-bind:value="val.id">{{val.name}}--{{new Date(val.time).toLocaleDateString()}}</option>
                             </select>
-                        </label><br><br>
-                        <span>考试时间 ： </span>
-                        <label>
+                              </label>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>考试时间 ： </td>
+                        <td>
+                            <label>
                             <input type="datetime-local" class="form-control" v-model="newExam.releaseTime"  required>
-                        </label><br><br>
-                        <span>考试时长 ： </span>
-                        <label>
+                        </label>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>考试时长 ： </td>
+                        <td><label>
                             <input type="number" class="form-control" v-model="newExam.duration" required>
-                        </label><br><br>
-                        <input type="submit" class="form-control" value="添加考试" v-if="examAddControl"
-                               style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                        <input type="submit" class="form-control" value="确认修改" v-if="examEditControl"
-                               style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                    </form>
+                        </label>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br><br>
+                    <input type="submit" class="form-control" value="添加考试" v-if="examAddControl"
+                           style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;" @click="doExamEdit">
+                    <input type="submit" class="form-control" value="确认修改" v-if="examEditControl"
+                           style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;" @click="doExamEdit">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" @click="showExamAddPage">关闭</button>
@@ -227,11 +254,11 @@
                 <tr>
                     <th>试卷名称</th>
                     <th>课程名称</th>
-                    <th>教师</th>
-                    <th>学院</th>
-                    <th>专业</th>
-                    <th>时间</th>
-                    <th>时长</th>
+                    <th>教　　师</th>
+                    <th>学　　院</th>
+                    <th>专　　业</th>
+                    <th>时　　间</th>
+                    <th>时　　长</th>
                 </tr>
                 </thead>
                 <tbody class="infoTableTd">
@@ -257,7 +284,7 @@
                         <h4 class="list-group-item-heading">
                             <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
                         </h4>
-                        <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0%" @click="deleteExamQuestion(val.examInfoId, 1, examInfoOfEdited.id)">删除</label>
+                        <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0" @click="deleteExamQuestion(val.examInfoId, 1, examInfoOfEdited.id)">删除</label>
                     </div>
                     <a href="#" class="list-group-item">
                         <h4 class="list-group-item-heading" style="display: inline">
@@ -314,7 +341,7 @@
                     <h4 class="list-group-item-heading">
                         <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
                     </h4>
-                    <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0%" @click="deleteExamQuestion(val.examInfoId, 2, examInfoOfEdited.id)">删除</label>
+                    <label class="btn btn-primary" style="background-color:red; display: block; margin-left:95%; margin-right: 0" @click="deleteExamQuestion(val.examInfoId, 2, examInfoOfEdited.id)">删除</label>
                     <div style="height: 100%;width: 100%">
                         <label style="width: 100%; height: 100%;">
                             <input type="text" style="width: 100%; height: 100px">
@@ -335,41 +362,64 @@
                     <h4 class="modal-title">请输入课程信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post" @submit.prevent="">
-                        <span>题目描述 ： </span>
-                        <label>
-                            <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description" required>
-                        </label><br><br>
-                        <span>选项A ： </span>
-                        <label>
+                    <table><tbody>
+                    <tr>
+                        <td>题目描述 ： </td>
+                        <td><label>
+                            <textarea class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description" required>
+                            </textarea>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选　项A ： </td>
+                        <td><label>
                             <input type="text" class="form-control" v-model="newChoiceQuestion.optionA" required>
-                        </label><br><br>
-                        <span>选项B ： </span>
-                        <label>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选　项B ： </td>
+                        <td><label>
                             <input type="text" class="form-control" v-model="newChoiceQuestion.optionB" required>
-                        </label><br><br>
-                        <span>选项C ： </span>
-                        <label>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选　项C ： </td>
+                        <td><label>
                             <input type="text" class="form-control" v-model="newChoiceQuestion.optionC" required>
-                        </label><br><br>
-                        <span>选项D ： </span>
-                        <label>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>选　项D ： </td>
+                        <td><label>
                             <input type="text" class="form-control" v-model="newChoiceQuestion.optionD" required>
-                        </label><br><br>
-                        <span>答案 ： </span>
-                        <label>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>答　　案 ： </td>
+                        <td><label>
                             <select class="form-control" v-model="newChoiceQuestion.answer" required >
                                 <option value="A">A</option>
                                 <option value="B">B</option>
                                 <option value="C">C</option>
                                 <option value="D">D</option>
                             </select>
-                        </label><br><br>
-                        <span>分值 ： </span>
-                        <label>
+                        </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>分　　值 ： </td>
+                        <td><label>
                             <input type="number" class="form-control" v-model="newChoiceQuestion.score" required>
-                        </label><br><br>
-                    </form>
+                        </label>
+                        </td>
+                    </tr>
+                    </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" @click="showNewChoiceQuestionAddDiv">关闭</button>
@@ -388,16 +438,25 @@
                     <h4 class="modal-title">请输入课程信息</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post">
-                        <span>题目描述 ： </span>
-                        <label>
-                            <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description" required>
-                        </label><br><br>
-                        <span>分值 ： </span>
-                        <label>
+                    <table>
+                        <tbody>
+                        <tr>
+                        <td>题目描述 ： </td>
+                        <td><label>
+                            <textarea  class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description" required>
+                            </textarea>
+                        </label>
+                        </td>
+                        </tr>
+                        <tr>
+                        <td>分　　值 ： </td>
+                        <td><label>
                             <input type="number" class="form-control" v-model="newObjectiveQuestion.score" required>
-                        </label><br><br>
-                    </form>
+                        </label>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" @click="showNewObjectiveQuestionAddDivControl">关闭</button>
@@ -469,7 +528,7 @@
     <div v-if="answerOfStudentDivControl" class="examQuestionEditDiv rollControl">
         <div>
             <h2 style="display: inline">客观题</h2>
-            <h3 class="btn btn-primary" style="display: inline; margin-left:80%; margin-right: 0%" @click="answerOfStudentDivSwitch('')">退出</h3>
+            <h3 class="btn btn-primary" style="display: inline; margin-left:80%; margin-right: 0" @click="answerOfStudentDivSwitch('')">退出</h3>
             <br><br><br>
             <div class="list-group" v-for="(val, index) in objectiveQuestionOfStudentDone">
                 <div class="list-group-item active">

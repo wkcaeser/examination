@@ -148,7 +148,6 @@ public class TeacherController {
 	@GetMapping("/question/{examId}/{type}")
 	public ResponseData getExamQuestionsByIdAndType(@PathVariable("examId") int examId, @PathVariable("type") int type){
 		List<Map<String, Object>> res = examInfoServiceBs.getExamQuestionByExamIdAndType(examId, type);
-		res.forEach(obj -> obj.put("answer", ""));
 		return new ResponseData.Builder()
 				.data(res)
 				.build();
