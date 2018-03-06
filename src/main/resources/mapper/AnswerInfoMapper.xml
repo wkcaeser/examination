@@ -20,11 +20,25 @@
     </select>
 
     <select id="selectStudentInfosByExamId" resultType="map">
-        SELECT b.id, b.username, b.name, c.name AS department_name, d.name AS major_name
+        SELECT b.id, b.username, b.name, c.name AS department_name, d.name AS major_name, f.score_max, f.score_choice, f.score_objective
         FROM answerInfo a
         LEFT JOIN user b ON a.user_id = b.id
         LEFT JOIN department c ON b.department_id = c.id
         LEFT JOIN major d ON b.major_id = d.id
+        LEFT JOIN score f ON a.exam_id = f.exam_id AND a.user_id = f.user_id
         WHERE a.exam_id = #{examId}
     </select>
+
+    <select id="selectByStudentId" resultType="map">
+        SELECT b.name AS exam_name, c.name AS lesson_name, d.name AS teacher_name,
+          f.score_max, f.score_choice, f.score_objective, a.updated_time
+        FROM answerInfo a
+        LEFT JOIN exam b ON a.exam_id = b.id
+        LEFT JOIN lesson c ON b.lesson_id = c.id
+        LEFT JOIN user d ON c.teacher_id = d.id
+        LEFT JOIN score f ON a.exam_id = f.exam_id AND a.user_id = f.user_id
+        WHERE a.user_id = #{userId}
+        ORDER BY a.updated_time DESC
+    </select>
+
 </mapper>

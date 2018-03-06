@@ -22,4 +22,18 @@
         </if>
         WHERE a.exam_id = #{examId} AND a.type = #{type} AND a.status = 0
     </select>
+
+    <select id="countChoiceScore" resultType="_int">
+        SELECT SUM(b.score)
+        FROM examInfo a
+        LEFT JOIN choiceQuestion b ON a.question_id = b.id
+        WHERE a.exam_id = #{examId} AND a.type = 1
+    </select>
+
+    <select id="countObjectiveScore" resultType="_int">
+        SELECT SUM(b.score)
+        FROM examInfo a
+        LEFT JOIN objectiveQuestion b ON a.question_id = b.id
+        WHERE a.exam_id = #{examId} AND a.type = 2
+    </select>
 </mapper>

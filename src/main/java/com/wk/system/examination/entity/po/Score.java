@@ -8,11 +8,20 @@ public class Score {
   private Long user_id;
   private Long score_choice;
   private Long score_objective;
+  private Long score_max;
   private Long status;
   private java.sql.Timestamp created_time;
   private java.sql.Timestamp updated_time;
 
-  public Long getId() {
+	public Long getScore_max() {
+		return score_max;
+	}
+
+	public void setScore_max(Long score_max) {
+		this.score_max = score_max;
+	}
+
+	public Long getId() {
     return id;
   }
 

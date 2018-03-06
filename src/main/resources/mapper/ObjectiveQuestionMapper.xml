@@ -8,4 +8,10 @@
         INSERT INTO objectiveQuestion(description, score, department_id, major_id, teacher_id)
                 VALUES (#{description}, #{score} , #{department_id}, #{major_id}, #{teacher_id})
     </insert>
+
+    <select id="selectById" resultType="objectiveQuestion">
+        SELECT *
+        FROM objectivequestion
+        WHERE id = #{id}
+    </select>
 </mapper>

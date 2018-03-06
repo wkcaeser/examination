@@ -15,4 +15,10 @@
         UPDATE choiceQuestion SET status = -1
         WHERE id = #{id}
     </update>
+
+    <select id="selectById" resultType="choiceQuestion">
+        SELECT *
+        FROM choiceQuestion
+        WHERE id = #{id}
+    </select>
 </mapper>

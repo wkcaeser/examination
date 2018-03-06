@@ -65,7 +65,16 @@ var student = new Vue({
             choiceAnswers : [],
             objectiveAnswers : []
         },
-        interval : ""
+        interval : "",
+        scoresOfGet : {
+            exam_name : "",
+            lesson_name : "",
+            teacher_name : "",
+            score_max : "",
+            score_choice : "",
+            score_objective : "",
+            updated_time : ""
+        }
     },
     mounted : function () {
         this.getStudentInfo();
@@ -73,7 +82,14 @@ var student = new Vue({
     },
     watch : {
         'pageSwitchControl.examListDiv' : {handler : function () {
-            this.getExamList();
+            if(this.pageSwitchControl.examListDiv) {
+                this.getExamList();
+            }
+        }, deep: true},
+        'pageSwitchControl.examOfDoneDiv' : {handler : function () {
+            if (this.pageSwitchControl.examOfDoneDiv) {
+                this.getScores();
+            }
         }, deep: true},
         'examDoPageControl' : {handler : function () {
             if (this.examDoPageControl) {
@@ -84,6 +100,15 @@ var student = new Vue({
         }}
     },
     methods : {
+        switchPage : function (page) {
+            for(var key in this.pageSwitchControl){
+                this.pageSwitchControl[key] = false;
+            }
+            switch (page){
+                case "examListDiv" : this.pageSwitchControl.examListDiv = true; break;
+                case "examOfDoneDiv" : this.pageSwitchControl.examOfDoneDiv = true; break;
+            }
+        },
         getStudentInfo : function () {
             var _this = this;
             var username = header.getCookieValue("username");
@@ -247,6 +272,27 @@ var student = new Vue({
                 brothers[i].style.background = "white";
             }
             element.style.background = "#29dc29";
+        },
+        getScores : function () {
+            var _this = this;
+            axios.get("/service/student/score/" + this.studentInfo.id).then(function (response) {
+                if(response.data.status.code === 200){
+                    _this.scoresOfGet = response.data.data;
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("查询分数失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        adjustTime : function (date) {
+            var time = new Date(date);
+            var offSetMill = time.getTimezoneOffset() * 60000;
+            time = time.getTime() + offSetMill;
+            return new Date(time).toLocaleDateString() + " " + new Date(time).toLocaleTimeString();
         }
     }
 });

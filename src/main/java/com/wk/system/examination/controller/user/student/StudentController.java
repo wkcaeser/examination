@@ -70,4 +70,10 @@ public class StudentController {
 		List answer = answerInfoServiceBs.getAnswer(examId, userId);
 		return new ResponseData.Builder().data(answer).build();
 	}
+
+	@GetMapping("/score/{userId}")
+	public ResponseData getScores(@PathVariable("userId") int userId){
+		List res = answerInfoServiceBs.getScoresByStudentId(userId);
+		return new ResponseData.Builder().data(res).build();
+	}
 }

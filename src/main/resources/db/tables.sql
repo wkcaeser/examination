@@ -39,14 +39,14 @@ CREATE TABLE lesson(
   id INT NOT NULL AUTO_INCREMENT COMMENT '自增id',
   name VARCHAR(32) NOT NULL COMMENT '课程名称',
   teacher_id INT NOT NULL COMMENT '任课教师id',
-  departemnt_id INT NOT NULL COMMENT '所属学院id',
+  department_id INT NOT NULL COMMENT '所属学院id',
   major_id INT NOT NULL COMMENT '所属专业',
   status TINYINT NOT NULL DEFAULT 0 COMMENT '状态-》0：正常, -1：无效',
   created_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (id),
   INDEX (teacher_id),
-  INDEX (departemnt_id),
+  INDEX (department_id),
   INDEX (major_id)
 )ENGINE = InnoDB DEFAULT CHARSET = utf8 COMMENT = '课程表';
 
@@ -132,6 +132,7 @@ CREATE TABLE score(
   user_id INT NOT NULL COMMENT '用户id',
   score_choice INT NOT NULL COMMENT '选择题分数',
   score_objective INT NOT NULL COMMENT '客观题分数',
+  score_max INT NOT NULL COMMENT '满分',
   status TINYINT NOT NULL DEFAULT 0 COMMENT '状态 0:正常',
   created_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',

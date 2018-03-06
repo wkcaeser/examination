@@ -135,7 +135,10 @@ var teacher = new Vue({
             username : "",
             name : "",
             department_name : "",
-            major_name : ""
+            major_name : "",
+            score_choice : "",
+            score_objective : "",
+            score_max : ""
         },
         studentInfoOfFinishExamControl : false,
         answerOfStudentDivControl : false,
@@ -176,13 +179,19 @@ var teacher = new Vue({
             this.getLessonsInfo();
         }, deep: true},
         'pageShowController.lessonPage' :{handler : function () {
-            this.getLessonsInfo();
+            if(this.pageShowController.lessonPage) {
+                this.getLessonsInfo();
+            }
         }, deep: true},
         'pageShowController.testPaperPage' :{handler : function () {
-            this.getExamList();
+            if(this.pageShowController.testPaperPage) {
+                this.getExamList();
+            }
         }, deep: true},
         'pageShowController.scorePage' :{handler : function () {
-            this.getFinishedExam();
+            if(this.pageShowController.scorePage) {
+                this.getFinishedExam();
+            }
         }, deep: true}
     },
     methods : {
@@ -612,18 +621,37 @@ var teacher = new Vue({
             _this.scoreOfStudent.student_id = _this.studentInfoIsDone.id;
             _this.scoreOfStudent.score = 0;
             for(var i=0; i<_this.objectiveQuestionOfStudentDone.length; i++){
+                var index = i + 1;
                 if(_this.objectiveQuestionOfStudentDone[i].scoreOfGet === ""){
-                    alert("题目 " + i + " 未判分!!!");
+                    alert("题目 " + index + " 未判分!!!");
                     return;
                 }
                 if(_this.objectiveQuestionOfStudentDone[i].scoreOfGet < 0
                     || _this.objectiveQuestionOfStudentDone[i].scoreOfGet > _this.objectiveQuestionOfStudentDone[i].score){
-                    alert("题目 " + i + " 判分不合法!!!");
+                    alert("题目 " + index + " 判分不合法!!!");
                     return;
                 }
                 _this.scoreOfStudent.score += _this.objectiveQuestionOfStudentDone[i].scoreOfGet - 0;
+                if(isNaN(_this.scoreOfStudent.score)){
+                    alert("题目 " + index + " 未判分!!!");
+                    return;
+                }
             }
-            console.log(_this.scoreOfStudent);
+            var params = header.requestDataParser(_this.scoreOfStudent);
+            axios.post("/service/teacher/exam/score", params).then(function (response) {
+                if(response.data.status.code === 200){
+                    alert("上传成绩成功");
+                    _this.answerOfStudentDivSwitch("");
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }
+                else {
+                    alert("上传成绩失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
         }
     }
 });

@@ -194,6 +194,7 @@ public class TeacherController {
 
 	@PostMapping("/exam/score")
 	public ResponseData setScore(int student_id, int exam_id, int score){
+		answerInfoServiceBs.setScore(exam_id, student_id, score);
 		return new ResponseData.Builder().build();
 	}
 }

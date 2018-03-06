@@ -2,7 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wk.system.examination.entity.dao.ScoreMapper">
     <insert id="insert" parameterType="score">
-        INSERT INTO score(exam_id, user_id, score_choice, score_objective)
-        VALUES (#{exam_id}, #{user_id}, #{score_choice}, #{score_objective})
+        INSERT INTO score(exam_id, user_id, score_choice, score_objective, score_max)
+        VALUES (#{exam_id}, #{user_id}, #{score_choice}, #{score_objective}, #{score_max})
     </insert>
+
+    <update id="update" parameterType="score">
+        UPDATE score SET score_objective = #{score_objective}, score_choice = #{score_choice}, score_max = #{score_max}
+        WHERE exam_id = #{exam_id} AND user_id = #{user_id}
+    </update>
+
+    <select id="selectByUserIdAndExamId" resultType="map">
+        SELECT *
+        FROM score
+        WHERE exam_id = #{examId} AND user_id = #{userId};
+    </select>
 </mapper>

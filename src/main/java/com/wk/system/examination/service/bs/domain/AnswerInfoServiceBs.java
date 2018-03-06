@@ -9,4 +9,8 @@ public interface AnswerInfoServiceBs {
 	List<Map<String, Object>> getAnswer(int examId, int userId);
 
 	List<Map<String, Object>> getStudentInfosByExamId(int examId);
+
+	void setScore(int examId, int studentId, int scoreOfObjective);
+
+	List<Map<String, Object>> getScoresByStudentId(int studentId);
 }

@@ -420,7 +420,7 @@
                     <td>{{val.name}}</td>
                     <td>{{val.department_name}}</td>
                     <td>{{val.major_name}}</td>
-                    <td>{{100}}</td>
+                    <td>({{val.score_choice}} + {{val.score_objective}})/{{val.score_max}} --> {{((val.score_choice+val.score_objective)*100/val.score_max).toFixed(2)}}</td>
                 </tr>
                 </tbody>
             </table><br><br>

@@ -1,8 +1,10 @@
 package com.wk.system.examination.entity.dao;
 
 import com.wk.system.examination.entity.po.AnswerInfo;
+import com.wk.system.examination.entity.po.Major;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.omg.CORBA.OBJ_ADAPTER;
 
 import java.util.List;
 import java.util.Map;
@@ -17,4 +19,6 @@ public interface AnswerInfoMapper {
 	            );
 
 	List<Map<String, Object>> selectStudentInfosByExamId(@Param("examId") int examId);
+
+	List<Map<String, Object>> selectByStudentId(@Param("userId") int userId);
 }

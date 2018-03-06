@@ -14,4 +14,8 @@ public interface ExamInfoMapper {
 	void delete(@Param("id") Integer id);
 
 	List<Map<String, Object>> getExamQuestionsByExamIdAndType(@Param("examId") int examId, @Param("type") int type);
+
+	int countChoiceScore(@Param("examId") int examId);
+
+	int countObjectiveScore(@Param("examId") int examId);
 }

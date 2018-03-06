@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8"/>
     <title>学生工作台</title>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <script src="/lib/jquery.min.js"></script>
+    <script src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/lib/vue/vue.min.js"></script>
+    <script src="/lib/vue/axios.min.js"></script>
 </head>
 <body>
 <div id="header">
@@ -35,14 +40,14 @@
                     </tbody>
                 </table>
                 <ul class="list-group" style="margin-top: 30% ">
-                    <li class="list-group-item" >考试列表</li>
-                    <li class="list-group-item" >成绩管理</li>
+                    <li class="list-group-item" @click="switchPage('examListDiv')">考试列表</li>
+                    <li class="list-group-item" @click="switchPage('examOfDoneDiv')">成绩管理</li>
                 </ul>
             </div>
             <div class="col-md-1"></div>
             <div class="col-md-7 rightDiv">
                 <div class="rollControl" style="height: 100%">
-                    <div v-show="pageSwitchControl.examListDiv" class="showPageDiv">
+                    <div v-if="pageSwitchControl.examListDiv" class="showPageDiv">
                         <table class="table">
                             <caption style="font-weight: 200" class="lessonAddButton">
                                 <h2 style="display: inline">个人试卷</h2>
@@ -72,6 +77,34 @@
                             </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div v-if="pageSwitchControl.examOfDoneDiv" class="showPageDiv">
+                        <table class="table">
+                            <caption>
+                                <h2 style="display: inline">成绩信息</h2>
+                            </caption>
+                            <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>考试</th>
+                                <th>课程</th>
+                                <th>教师</th>
+                                <th>得分</th>
+                                <th>交卷时间</th>
+                            </tr>
+                            </thead>
+                            <tbody class="infoTableTd">
+                            <tr v-for="(val, index) in scoresOfGet">
+                                <td>{{index+1}}</td>
+                                <td>{{val.exam_name}}</td>
+                                <td>{{val.lesson_name}}</td>
+                                <td>{{val.teacher_name}}</td>
+                                <td v-if="isNaN((val.score_choice+val.score_objective)*100/val.score_max)">未改卷</td>
+                                <td v-if="!isNaN((val.score_choice+val.score_objective)*100/val.score_max)">({{val.score_choice}} + {{val.score_objective}})/{{val.score_max}} --> {{((val.score_choice+val.score_objective)*100/val.score_max).toFixed(2)}}</td>
+                                <td>{{ adjustTime(val.updated_time) }}</td>
+                            </tr>
+                            </tbody>
+                        </table><br><br>
                     </div>
                 </div>
             </div>
@@ -179,10 +212,6 @@
     <footer-template></footer-template>
 </div>
 </body>
-<link href="/lib/bootstrap/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-<script src="/lib/vue/vue.min.js"></script>
-<script src="/lib/vue/axios.min.js"></script>
-
 <link href="/css/boundary.css" type="text/css" rel="stylesheet"/>
 <script src="/js/boundary.js"></script>
 
