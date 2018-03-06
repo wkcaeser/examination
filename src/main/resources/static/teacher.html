@@ -139,61 +139,80 @@
 
     <!--弹出层-->
     <!--添加课程-->
-    <div class="ejectPage" v-if="lessonAddPageShow">
-        <div class="lessonAddPage">
-            <form method="post" @submit.prevent="addLesson">
-                <span>课程名称 ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newLesson.name">
-                </label><br><br>
-                <span>归属学院 ： </span>
-                <label>
-                    <select name="department" class="form-control" v-model="newLesson.department_id" required >
-                        <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
-                    </select>
-                </label><br><br>
-                <span>归属专业 ： </span>
-                <label>
-                    <select name="major" class="form-control" v-model="newLesson.major_id" required>
-                        <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
-                    </select>
-                </label><br><br>
-                <input type="submit" class="form-control" value="添加课程"
-                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                <div><a @click="showLessonAddPage">退出</a></div><br><br>
-            </form>
-        </div>
+    <div v-if="lessonAddPageShow" class="contentBoundary rollControl">
+    <div class="modal-dialog">
+        <div class="modal-content" style="margin-left: 5%; padding: 5%">
+            <div class="modal-header">
+                <button type="button" class="close" @click="showLessonAddPage">&times;</button>
+                <h4 class="modal-title">请输入课程信息</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" @submit.prevent="">
+                    <span>课程名称 ： </span>
+                    <label>
+                        <input type="text" class="form-control" v-model="newLesson.name">
+                    </label><br><br>
+                    <span>归属学院 ： </span>
+                    <label>
+                        <select name="department" class="form-control" v-model="newLesson.department_id" required >
+                            <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
+                        </select>
+                    </label><br><br>
+                    <span>归属专业 ： </span>
+                    <label>
+                        <select name="major" class="form-control" v-model="newLesson.major_id" required>
+                            <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
+                        </select>
+                    </label><br><br>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" @click="showLessonAddPage">关闭</button>
+                <button type="button" class="btn btn-primary" @click="addLesson">添加</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
     </div>
 
     <!--添加试卷 编辑试卷-->
-    <div class="ejectPage" v-if="examAddPageShow">
-        <div class="lessonAddPage">
-            <form method="post" @submit.prevent="doExamEdit">
-                <span>考试名称 ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newExam.name">
-                </label><br><br>
-                <span>所属课程 ： </span>
-                <label>
-                    <select class="form-control" v-model="newExam.lesson_id" required >
-                        <option v-for="(val) in lessonsInfo" v-bind:value="val.id">{{val.name}}--{{new Date(val.time).toLocaleDateString()}}</option>
-                    </select>
-                </label><br><br>
-                <span>考试时间 ： </span>
-                <label>
-                    <input type="datetime-local" class="form-control" v-model="newExam.releaseTime"  required>
-                </label><br><br>
-                <span>考试时长 ： </span>
-                <label>
-                    <input type="number" class="form-control" v-model="newExam.duration" required>
-                </label><br><br>
-                <input type="submit" class="form-control" value="添加考试" v-if="examAddControl"
-                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                <input type="submit" class="form-control" value="确认修改" v-if="examEditControl"
-                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                <div><a @click="showExamAddPage">退出</a></div><br><br>
-            </form>
-        </div>
+    <div v-if="examAddPageShow" class="contentBoundary rollControl">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: 5%; padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="showExamAddPage">&times;</button>
+                    <h4 class="modal-title">请编辑考试信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" @submit.prevent="doExamEdit">
+                        <span>考试名称 ： </span>
+                        <label>
+                            <input type="text" class="form-control" v-model="newExam.name">
+                        </label><br><br>
+                        <span>所属课程 ： </span>
+                        <label>
+                            <select class="form-control" v-model="newExam.lesson_id" required >
+                                <option v-for="(val) in lessonsInfo" v-bind:value="val.id">{{val.name}}--{{new Date(val.time).toLocaleDateString()}}</option>
+                            </select>
+                        </label><br><br>
+                        <span>考试时间 ： </span>
+                        <label>
+                            <input type="datetime-local" class="form-control" v-model="newExam.releaseTime"  required>
+                        </label><br><br>
+                        <span>考试时长 ： </span>
+                        <label>
+                            <input type="number" class="form-control" v-model="newExam.duration" required>
+                        </label><br><br>
+                        <input type="submit" class="form-control" value="添加考试" v-if="examAddControl"
+                               style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                        <input type="submit" class="form-control" value="确认修改" v-if="examEditControl"
+                               style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="showExamAddPage">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
 
     <!--编辑试卷内容-->
@@ -284,6 +303,7 @@
                     </a>
                 </div>
             </div>
+            <br><br><br><br>
             <div style="width: 100%; height: 100%">
                 <h3 style="display: inline">客观题</h3>
                 <h4 class="btn btn-primary" style="display: inline; margin-left:90%; margin-right: 10%" @click="showNewObjectiveQuestionAddDivControl">添加</h4>
@@ -307,67 +327,86 @@
     </div>
 
     <!--添加选择题-->
-    <div v-if="examChoiceQuestionAddDivControl" class="ejectPage rollControl">
-        <div class="lessonAddPage">
-            <form method="post" @submit.prevent="addNewChoiceQuestion">
-                <span>题目描述 ： </span>
-                <label>
-                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description" required>
-                </label><br><br>
-                <span>选项A ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionA" required>
-                </label><br><br>
-                <span>选项B ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionB" required>
-                </label><br><br>
-                <span>选项C ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionC" required>
-                </label><br><br>
-                <span>选项D ： </span>
-                <label>
-                    <input type="text" class="form-control" v-model="newChoiceQuestion.optionD" required>
-                </label><br><br>
-                <span>答案 ： </span>
-                <label>
-                    <select class="form-control" v-model="newChoiceQuestion.answer" required >
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                    </select>
-                </label><br><br>
-                <span>分值 ： </span>
-                <label>
-                    <input type="number" class="form-control" v-model="newChoiceQuestion.score" required>
-                </label><br><br>
-                <input type="submit" class="form-control" value="添加试题"
-                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                <div><a @click="showNewChoiceQuestionAddDiv">退出</a></div><br><br><br><br>
-            </form>
-        </div>
+    <div v-if="examChoiceQuestionAddDivControl" class="contentBoundary rollControl">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: 5%; padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="showNewChoiceQuestionAddDiv">&times;</button>
+                    <h4 class="modal-title">请输入课程信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" @submit.prevent="">
+                        <span>题目描述 ： </span>
+                        <label>
+                            <input type="text" class="form-control" STYLE="height: 100px" v-model="newChoiceQuestion.description" required>
+                        </label><br><br>
+                        <span>选项A ： </span>
+                        <label>
+                            <input type="text" class="form-control" v-model="newChoiceQuestion.optionA" required>
+                        </label><br><br>
+                        <span>选项B ： </span>
+                        <label>
+                            <input type="text" class="form-control" v-model="newChoiceQuestion.optionB" required>
+                        </label><br><br>
+                        <span>选项C ： </span>
+                        <label>
+                            <input type="text" class="form-control" v-model="newChoiceQuestion.optionC" required>
+                        </label><br><br>
+                        <span>选项D ： </span>
+                        <label>
+                            <input type="text" class="form-control" v-model="newChoiceQuestion.optionD" required>
+                        </label><br><br>
+                        <span>答案 ： </span>
+                        <label>
+                            <select class="form-control" v-model="newChoiceQuestion.answer" required >
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </label><br><br>
+                        <span>分值 ： </span>
+                        <label>
+                            <input type="number" class="form-control" v-model="newChoiceQuestion.score" required>
+                        </label><br><br>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="showNewChoiceQuestionAddDiv">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="addNewChoiceQuestion">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
-    <br><br><br>
+
     <!--添加客观题-->
-    <div v-if="examObjectiveQuestionAddDivControl" class="ejectPage rollControl">
-        <div class="lessonAddPage">
-            <form method="post" @submit.prevent="addNewObjectiveQuestion">
-                <span>题目描述 ： </span>
-                <label>
-                    <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description" required>
-                </label><br><br>
-                <span>分值 ： </span>
-                <label>
-                    <input type="number" class="form-control" v-model="newObjectiveQuestion.score" required>
-                </label><br><br>
-                <input type="submit" class="form-control" value="添加试题"
-                       style="width:100%;height:60px;background-color:steelblue;color:#fff;font-weight:bold;font-size:20px;">
-                <div><a @click="showNewObjectiveQuestionAddDivControl">退出</a></div><br><br><br><br>
-            </form>
-        </div>
+    <div v-if="examObjectiveQuestionAddDivControl" class="contentBoundary rollControl">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: 5%; padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="showNewObjectiveQuestionAddDivControl">&times;</button>
+                    <h4 class="modal-title">请输入课程信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <span>题目描述 ： </span>
+                        <label>
+                            <input type="text" class="form-control" STYLE="height: 100px" v-model="newObjectiveQuestion.description" required>
+                        </label><br><br>
+                        <span>分值 ： </span>
+                        <label>
+                            <input type="number" class="form-control" v-model="newObjectiveQuestion.score" required>
+                        </label><br><br>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="showNewObjectiveQuestionAddDivControl">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="addNewObjectiveQuestion">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
+
     <!--考试学生界面-->
     <div v-if="studentInfoOfFinishExamControl" class="examQuestionEditDiv rollControl">
         <div>
