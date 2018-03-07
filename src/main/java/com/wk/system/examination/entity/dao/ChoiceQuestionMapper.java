@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ChoiceQuestionMapper {
@@ -13,4 +14,8 @@ public interface ChoiceQuestionMapper {
 	void delete(@Param("id") Integer id);
 
 	ChoiceQuestion selectById(@Param("id") Integer id);
+
+	List<Map<String, Object>> getHistory(@Param("department_id") Integer departmentId,
+	                                     @Param("major_id") Integer major_id
+	);
 }

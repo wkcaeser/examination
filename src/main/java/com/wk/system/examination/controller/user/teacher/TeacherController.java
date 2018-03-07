@@ -1,5 +1,6 @@
 package com.wk.system.examination.controller.user.teacher;
 
+import com.wk.system.examination.entity.codes.QuestionTypeCode;
 import com.wk.system.examination.entity.po.Exam;
 import com.wk.system.examination.entity.po.Lesson;
 import com.wk.system.examination.entity.vo.ResponseCode;
@@ -9,6 +10,7 @@ import com.wk.system.examination.service.bs.users.teacher.TeacherServiceBs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -194,6 +196,27 @@ public class TeacherController {
 	@PostMapping("/exam/score")
 	public ResponseData setScore(int student_id, int exam_id, int score){
 		answerInfoServiceBs.setScore(exam_id, student_id, score);
+		return new ResponseData.Builder().build();
+	}
+
+	@GetMapping("/history/{type}")
+	public ResponseData getHistory(@RequestParam(required = false) Integer departmentId,
+	                               @RequestParam(required = false) Integer majorId,
+	                               @PathVariable Integer type
+	                               ){
+		List res = new ArrayList();
+		if(type == QuestionTypeCode.TYPE_OBJECTIVE.getValue()){
+			res = examInfoServiceBs.getHistoryQuestions(departmentId, majorId, QuestionTypeCode.TYPE_OBJECTIVE);
+		}
+		if(type == QuestionTypeCode.TYPE_CHOICE.getValue()){
+			res = examInfoServiceBs.getHistoryQuestions(departmentId, majorId, QuestionTypeCode.TYPE_CHOICE);
+		}
+		return new ResponseData.Builder().data(res).build();
+	}
+
+	@PostMapping("/addHistory")
+	public ResponseData addHistory(Integer examId, Integer questionId, Integer type){
+		examInfoServiceBs.addHistoryQuestion(examId, questionId, type);
 		return new ResponseData.Builder().build();
 	}
 }

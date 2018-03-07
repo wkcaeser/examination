@@ -13,4 +13,6 @@ public interface AnswerInfoServiceBs {
 	void setScore(int examId, int studentId, int scoreOfObjective);
 
 	List<Map<String, Object>> getScoresByStudentId(int studentId);
+
+
 }

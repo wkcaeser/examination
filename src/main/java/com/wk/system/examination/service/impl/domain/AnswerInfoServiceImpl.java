@@ -101,4 +101,6 @@ public class AnswerInfoServiceImpl implements AnswerInfoServiceBs {
 	public List<Map<String, Object>> getScoresByStudentId(int studentId) {
 		return answerInfoMapper.selectByStudentId(studentId);
 	}
+
+
 }

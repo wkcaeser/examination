@@ -21,4 +21,16 @@
         FROM choiceQuestion
         WHERE id = #{id}
     </select>
+
+    <select id="getHistory" resultType="map">
+        SELECT *
+        FROM choicequestion
+        WHERE 1=1
+        <if test="department_id">
+            AND department_id = #{department_id}
+        </if>
+        <if test="major_id">
+            AND major_id = #{major_id}
+        </if>
+    </select>
 </mapper>

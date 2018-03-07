@@ -166,6 +166,30 @@ var teacher = new Vue({
             name : "",
             department_name : "",
             major_name : ""
+        },
+        getHistoryControl : {
+           choice : false,
+           objective : false
+        },
+        historyParam : {
+            departmentId : "",
+            majorId : "",
+            type : ""
+        },
+        historyChoiceQuestions : {
+            id : "",
+            description : "",
+            optionA : "",
+            optionB : "",
+            optionC : "",
+            optionD : "",
+            answer : "",
+            score : ""
+        },
+        historyObjectiveQuestions : {
+            id : "",
+            description : "",
+            score : "",
         }
     },
     mounted : function () {
@@ -188,10 +212,25 @@ var teacher = new Vue({
                 this.getExamList();
             }
         }, deep: true},
-        'pageShowController.scorePage' :{handler : function () {
-            if(this.pageShowController.scorePage) {
-                this.getFinishedExam();
+        'getHistoryControl.choice' :{handler : function () {
+            if(this.getHistoryControl.choice) {
+                this.getHistory(1);
+                this.getDepartmentData();
+            }else {
+                this.getExamQuestionList(this.examInfoOfEdited.id, 1);
             }
+        }, deep: true},
+        'getHistoryControl.objective' :{handler : function () {
+            if(this.getHistoryControl.objective) {
+                this.getHistory(2);
+                this.getDepartmentData();
+            }
+            else {
+                this.getExamQuestionList(this.examInfoOfEdited.id, 2);
+            }
+        }, deep: true},
+        'historyParam.departmentId' :{handler : function () {
+            this.getMajorDataOfHistoryQuestion();
         }, deep: true}
     },
     methods : {
@@ -209,6 +248,18 @@ var teacher = new Vue({
             var _this = this;
             axios.get("/service/department").then(function (reponse) {
                 _this.departmentData = reponse.data.data;
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            });
+        },
+        getMajorDataOfHistoryQuestion : function () {
+            var _this = this;
+            if(_this.historyParam.departmentId === ""){
+                return;
+            }
+            axios.get("/service/"+ _this.historyParam.departmentId +"/major").then(function (reponse) {
+                _this.majorData = reponse.data.data;
             }).catch(function (error) {
                 console.log(error);
                 alert("网络错误");
@@ -653,6 +704,65 @@ var teacher = new Vue({
                 }
                 else {
                     alert("上传成绩失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        toHistoryChoicePage : function () {
+            this.getHistoryControl.choice = !(this.getHistoryControl.choice);
+        },
+        toHistoryObjectivePage : function () {
+            this.getHistoryControl.objective = !(this.getHistoryControl.objective);
+        },
+        getHistory : function (type) {
+            var _this = this;
+            _this.historyParam.type = type;
+            var params = header.requestDataParserOfGet(_this.historyParam);
+            axios.get("/service/teacher/history/" + type + params).then(function (response) {
+                if(response.data.status.code === 200){
+                    if(type === 1) {
+                        _this.historyChoiceQuestions = response.data.data;
+                    }
+                    if(type === 2){
+                        _this.historyObjectiveQuestions = response.data.data;
+                    }
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("历史题库查询失败");
+                }
+            }).catch(function (error) {
+                console.log(error);
+                alert("网络错误");
+            })
+        },
+        addHistoryQuestion : function (type, qid) {
+            if(!confirm("确认添加此试题？")){
+                return;
+            }
+            var _this = this;
+            var params = {"examId":_this.examInfoOfEdited.id,
+                            "type":type,
+                "questionId":qid
+            };
+            params = header.requestDataParser(params);
+            axios.post("/service/teacher/addHistory", params).then(function (response) {
+                if(response.data.status.code === 200){
+                    alert("添加成功");
+                    if(!confirm("继续添加？")){
+                        if(type === 1){
+                            _this.toHistoryChoicePage();
+                        }
+                        if(type === 2){
+                            _this.toHistoryObjectivePage();
+                        }
+                    }
+                }else if(response.data.status.code === 555){
+                    header.toWelcomePage();
+                }else {
+                    alert("历史题库查询失败");
                 }
             }).catch(function (error) {
                 console.log(error);

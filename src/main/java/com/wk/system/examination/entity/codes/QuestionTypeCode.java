@@ -17,4 +17,5 @@ public enum  QuestionTypeCode {
 	public String getValueString(){
 		return value + "";
 	}
+
 }

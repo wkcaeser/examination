@@ -276,7 +276,8 @@
             <div style="width: 100%; height: 100%">
                 <div style="width: 100%; height: 100%">
                     <h3 style="display: inline">选择题</h3>
-                    <h4 class="btn btn-primary" style="display: inline; margin-left:90%; margin-right: 10%" @click="showNewChoiceQuestionAddDiv">添加</h4>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:75%" @click="showNewChoiceQuestionAddDiv">添加新题</h4>
+                    <h4 class="btn btn-primary" style="display: inline; margin-left:5%" @click="toHistoryChoicePage">题库导入</h4>
                 </div>
                 <br>
                 <div class="list-group" v-for="(val, index) in choiceQuestions">
@@ -333,7 +334,8 @@
             <br><br><br><br>
             <div style="width: 100%; height: 100%">
                 <h3 style="display: inline">客观题</h3>
-                <h4 class="btn btn-primary" style="display: inline; margin-left:90%; margin-right: 10%" @click="showNewObjectiveQuestionAddDivControl">添加</h4>
+                <h4 class="btn btn-primary" style="display: inline; margin-left:75%" @click="showNewObjectiveQuestionAddDivControl">添加新题</h4>
+                <h4 class="btn btn-primary" style="display: inline; margin-left:5%" @click="toHistoryObjectivePage">题库导入</h4>
             </div>
             <br>
             <div class="list-group" v-for="(val, index) in objectiveQuestions">
@@ -554,6 +556,133 @@
                     @click="submitAnswer()">改卷完成</label>
             <br><br><br><br><br><br>
         </div>
+    </div>
+
+    <!--添加历史选择题-->
+    <div v-if="getHistoryControl.choice" class="contentBoundary rollControl">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: 5%; padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="toHistoryChoicePage">&times;</button>
+                    <h4 class="modal-title">历史题库选择题信息</h4>
+                    <div>
+                        <label>学院 ：
+                            <select name="department" class="form-control" v-model="historyParam.departmentId" style="display: inline"
+                                    required>
+                                <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
+                            </select>
+                        </label>
+                        <label>专业 ：
+                            <select name="major" class="form-control" v-model="historyParam.majorId"  style="display: inline" required>
+                                <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
+                            </select>
+                        </label>
+                        <button class="btn btn-primary" @click="getHistory(1)">查询</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group" v-for="(val, index) in historyChoiceQuestions">
+                        <div href="#" class="list-group-item active">
+                            <h4 class="list-group-item-heading">
+                                <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
+                            </h4>
+                            <label class="btn btn-primary" style="background-color:forestgreen; display: block; margin-left:80%; margin-right: 0" @click="addHistoryQuestion(1, val.id)">添加</label>
+                        </div>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading" style="display: inline">
+                                A：
+                            </h4>
+                            <p class="list-group-item-text" style="display: inline">
+                                {{val.optionA}}
+                            </p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading" style="display: inline">
+                                B：
+                            </h4>
+                            <p class="list-group-item-text" style="display: inline">
+                                {{val.optionB}}
+                            </p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading" style="display: inline">
+                                C：
+                            </h4>
+                            <p class="list-group-item-text" style="display: inline">
+                                {{val.optionC}}
+                            </p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading" style="display: inline">
+                                D：
+                            </h4>
+                            <p class="list-group-item-text" style="display: inline">
+                                {{val.optionD}}
+                            </p>
+                        </a>
+                        <a href="#" class="list-group-item">
+                            <h4 class="list-group-item-heading" style="display: inline">
+                                答案：
+                            </h4>
+                            <p class="list-group-item-text" style="display: inline">
+                                {{
+                                String.fromCharCode("A".charCodeAt() + val.answer - 1)
+                                }}
+                            </p>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="toHistoryChoicePage">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <!--添加历史客观题-->
+    <div v-if="getHistoryControl.objective" class="contentBoundary rollControl">
+        <div class="modal-dialog">
+            <div class="modal-content" style="margin-left: 5%; padding: 5%">
+                <div class="modal-header">
+                    <button type="button" class="close" @click="toHistoryObjectivePage">&times;</button>
+                    <h4 class="modal-title">历史题库客观题信息</h4>
+                    <div>
+                        <label>学院 ：
+                            <select name="department" class="form-control" v-model="historyParam.departmentId" style="display: inline"
+                                    required>
+                                <option v-for="(val) in departmentData" v-bind:value="val.id">{{val.name}}</option>
+                            </select>
+                        </label>
+                        <label>专业 ：
+                            <select name="major" class="form-control" v-model="historyParam.majorId"  style="display: inline" required>
+                                <option v-for="(val) in majorData" v-bind:value="val.id">{{val.name}}</option>
+                            </select>
+                        </label>
+                        <button class="btn btn-primary" @click="getHistory(2)">查询</button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group" v-for="(val, index) in historyObjectiveQuestions">
+                        <div href="#" class="list-group-item active">
+                            <h4 class="list-group-item-heading">
+                                <label style="display: inline">{{index+1}}、{{val.description}}({{val.score}} 分)</label>
+                            </h4>
+                            <label class="btn btn-primary" style="background-color:forestgreen; display: block; margin-left:80%; margin-right: 0" @click="addHistoryQuestion(2, val.id)">添加</label>
+                        </div>
+                        <div style="height: 100%;width: 100%">
+                            <label style="width: 100%; height: 100%;">
+                                <input type="text" style="width: 100%; height: 100px">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" @click="toHistoryObjectivePage">关闭</button>
+                    <button type="button" class="btn btn-primary" @click="">添加</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
     </div>
 </div>
 
