@@ -212,6 +212,11 @@ var teacher = new Vue({
                 this.getExamList();
             }
         }, deep: true},
+        'pageShowController.scorePage' :{handler : function () {
+            if(this.pageShowController.scorePage) {
+                this.getFinishedExam();
+            }
+        }, deep: true},
         'getHistoryControl.choice' :{handler : function () {
             if(this.getHistoryControl.choice) {
                 this.getHistory(1);
