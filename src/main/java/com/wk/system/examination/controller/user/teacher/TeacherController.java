@@ -155,6 +155,15 @@ public class TeacherController {
 				.build();
 	}
 
+	@GetMapping("/question/correct/{examId}/{type}")
+	public ResponseData getCorrectExamQuestionsByIdAndType(@PathVariable("examId") int examId, @PathVariable("type") int type){
+		List<Map<String, Object>> res = examInfoServiceBs.getExamQuestionByExamIdAndType(examId, type);
+		res.forEach(obj -> {obj.put("answer", ""); obj.put("scoreOfGet", "");});
+		return new ResponseData.Builder()
+				.data(res)
+				.build();
+	}
+
 	@PostMapping("/question/delete/{examId}/{id}")
 	public ResponseData deleteExamQuestion(@PathVariable("examId") int examId, @PathVariable("id") int id){
 		boolean examIsStart = examServiceBs.checkExamIsStart(examId);

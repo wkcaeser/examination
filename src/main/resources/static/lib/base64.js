@@ -113,7 +113,7 @@ var result2 = Base.decode(result); //--> '125中文'
         return string;
     }
 
-    var _Base64 = new Base64();
+    var Base = new Base64();
 
-    return _Base64;
+    return Base;
 }));

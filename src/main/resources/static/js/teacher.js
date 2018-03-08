@@ -189,7 +189,7 @@ var teacher = new Vue({
         historyObjectiveQuestions : {
             id : "",
             description : "",
-            score : "",
+            score : ""
         }
     },
     mounted : function () {
@@ -619,12 +619,13 @@ var teacher = new Vue({
                 this.examInfoOfEdited = exam;
             }
         },
-        getObjectiveQuestionOfStudentDone : function (examId) {
+        getObjectiveQuestionOfStudentDone : function (examId, studentId) {
             var _this = this;
-            axios.get("/service/teacher/question/"+examId+"/2").then(function (response) {
+            axios.get("/service/teacher/question/correct/"+examId+"/2").then(function (response) {
                 var responseCode = response.data.status.code;
                 if(responseCode === 200){
                    _this.objectiveQuestionOfStudentDone = response.data.data;
+                   _this.getStudentAnswer(studentId, examId);
                 }else if(responseCode === 555){
                     header.toWelcomePage();
                 }else {
@@ -666,15 +667,16 @@ var teacher = new Vue({
             answer = JSON.parse(answer.answer);
             var objectives = answer.objectiveAnswers;
             for(var i=0; i<this.objectiveQuestionOfStudentDone.length; i++){
-                this.objectiveQuestionOfStudentDone[i].answer = this.getAnswerById(this.objectiveQuestionOfStudentDone[i].id, objectives);
+                this.objectiveQuestionOfStudentDone[i].answer = Base.decode(this.getAnswerById(this.objectiveQuestionOfStudentDone[i].id, objectives));
             }
         },
         answerOfStudentDivSwitch : function (student) {
             this.answerOfStudentDivControl = !(this.answerOfStudentDivControl);
             if(this.answerOfStudentDivControl === true){
                 this.studentInfoIsDone = student;
-                this.getObjectiveQuestionOfStudentDone(this.examInfoOfEdited.id);
-                this.getStudentAnswer(student.id, this.examInfoOfEdited.id);
+                this.getObjectiveQuestionOfStudentDone(this.examInfoOfEdited.id, student.id);
+            }else {
+                this.getStudentInfoOfFinishExam(this.examInfoOfEdited.id);
             }
         },
         submitAnswer : function () {

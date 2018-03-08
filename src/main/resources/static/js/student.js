@@ -192,7 +192,7 @@ var student = new Vue({
                 this.answers.choiceAnswers.push('{"id" : "' + this.choiceQuestions[i].id + '", "answer" : "' + this.choiceQuestions[i].answer + '"}');
             }
             for(var j=0; j<this.objectiveQuestions.length; j++){
-                this.answers.objectiveAnswers.push('{"id" : "' + this.objectiveQuestions[j].id + '", "answer" : "' + this.objectiveQuestions[j].answer + '"}');
+                this.answers.objectiveAnswers.push('{"id" : "' + this.objectiveQuestions[j].id + '", "answer" : "' + Base.encode(this.objectiveQuestions[j].answer) + '"}');
             }
             axios.post("/service/student/exam/answer", this.answers);
         },
@@ -242,7 +242,7 @@ var student = new Vue({
             answer = JSON.parse(answer.answer);
             var objectives = answer.objectiveAnswers;
             for(var i=0; i<this.objectiveQuestions.length; i++){
-                this.objectiveQuestions[i].answer = this.getAnswerById(this.objectiveQuestions[i].id, objectives);
+                this.objectiveQuestions[i].answer = Base.decode(this.getAnswerById(this.objectiveQuestions[i].id, objectives));
             }
 
         },
