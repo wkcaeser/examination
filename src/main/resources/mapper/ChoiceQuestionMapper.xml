@@ -32,5 +32,6 @@
         <if test="major_id">
             AND major_id = #{major_id}
         </if>
+        ORDER BY updated_time DESC
     </select>
 </mapper>
