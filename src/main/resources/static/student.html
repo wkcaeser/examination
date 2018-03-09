@@ -10,7 +10,7 @@
     <script src="/lib/vue/axios.min.js"></script>
     <script src="/lib/base64.js"></script>
 </head>
-<body>
+<body style="height: 100%">
 <div id="header">
     <header-template :show-exit="showExit"></header-template>
 </div>
@@ -48,11 +48,10 @@
             <div class="col-md-1"></div>
             <div class="col-md-7 rightDiv">
                 <div class="rollControl" style="height: 100%">
-                    <div v-if="pageSwitchControl.examListDiv" class="showPageDiv">
+                    <div v-if="pageSwitchControl.examListDiv" style="height: 100%">
                         <table class="table">
                             <caption style="font-weight: 200" class="lessonAddButton">
                                 <h2 style="display: inline">个人试卷</h2>
-                                <h4 class="btn btn-primary" style="display: inline; margin-left:60%; margin-right: 10%" >按钮</h4>
                             </caption>
                             <thead>
                             <tr>
